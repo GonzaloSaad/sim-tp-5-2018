@@ -2,6 +2,7 @@ package utn.frc.sim.simulation;
 
 public enum Events {
     INICIO("Inicio."),
+    INICIO_DEL_DIA("Inicio del dia."),
     LLEGADA_CLIENTE("Llegada de camion."),
     FIN_RECEPCION("Fin de recepcion."),
     FIN_BALANZA("Fin de balanza."),

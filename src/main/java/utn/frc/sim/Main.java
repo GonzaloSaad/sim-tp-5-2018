@@ -5,7 +5,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import utn.frc.sim.simulation.Simulation;
 import utn.frc.sim.simulation.SimulationType;
 import utn.frc.sim.simulation.SimulationWrapper;
 
@@ -26,5 +25,8 @@ public class Main extends Application {
         for (int i = 0; i < 30000; i++) {
             simulation.step();
         }
+        System.out.println(simulation.getAverageDurationOfService());
+        System.out.println(simulation.getAverageTrucksOutside());
+        System.out.println(simulation.getAverageTrucksServedPerDay());
     }
 }

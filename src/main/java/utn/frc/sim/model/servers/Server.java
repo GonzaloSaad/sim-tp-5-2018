@@ -50,6 +50,10 @@ public class Server {
         return state;
     }
 
+    public String getServerName() {
+        return serverName;
+    }
+
     public boolean isFree() {
         return state == ServerState.LBR;
     }
@@ -58,7 +62,4 @@ public class Server {
         return nextEnd != null && nextEnd.equals(clock);
     }
 
-    private String getFinalEventDescription() {
-        return END_OF_ATTENTION + SEPARATOR + serverName;
-    }
 }
