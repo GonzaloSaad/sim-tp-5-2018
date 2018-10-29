@@ -9,8 +9,13 @@ public class SimulationWrapper {
     private static final String NONE_SYMBOL = "-";
     private final Simulation simulation;
 
-    public SimulationWrapper(Simulation simulation) {
+
+    private SimulationWrapper(Simulation simulation) {
         this.simulation = simulation;
+    }
+
+    public static SimulationWrapper ofType(SimulationType type) {
+        return new SimulationWrapper(Simulation.ofType(type));
     }
 
     public void step() {
@@ -22,7 +27,7 @@ public class SimulationWrapper {
     Reloj y eventos.
      */
 
-    public String getLastEvent(){
+    public String getLastEvent() {
         return simulation.getLastEvent().toString();
     }
 
@@ -61,7 +66,7 @@ public class SimulationWrapper {
         return simulation.getRecepcion().getNextEnd().map(LocalDateTime::toString).orElse(NONE_SYMBOL);
     }
 
-    public String getRecepcionQueueLenght(){
+    public String getRecepcionQueueLenght() {
         return Integer.toString(simulation.getRecepcionQueue().size());
     }
 
@@ -84,7 +89,7 @@ public class SimulationWrapper {
         return simulation.getBalanza().getNextEnd().map(LocalDateTime::toString).orElse(NONE_SYMBOL);
     }
 
-    public String getBalanzaQueueLenght(){
+    public String getBalanzaQueueLenght() {
         return Integer.toString(simulation.getBalanzaQueue().size());
     }
 
@@ -129,7 +134,7 @@ public class SimulationWrapper {
     Cola de darsenas.
      */
 
-    public String getDarsenaQueueLenght(){
+    public String getDarsenaQueueLenght() {
         return Integer.toString(simulation.getDarsenaQueue().size());
     }
 
@@ -137,7 +142,7 @@ public class SimulationWrapper {
     Estatisticas y conteos.
      */
 
-    public String getNumberOfTrucksServed(){
+    public String getNumberOfTrucksServed() {
         return Integer.toString(simulation.getTrucksServed());
     }
 
@@ -145,11 +150,11 @@ public class SimulationWrapper {
         return Integer.toString(simulation.getDays());
     }
 
-    public String getAverageDurationOfService(){
+    public String getAverageDurationOfService() {
         return DoubleUtils.getDoubleWithFourPlaces(simulation.getAvgMinutesPerTruck());
     }
 
-    public String getTrucksServedPerDay(){
+    public String getTrucksServedPerDay() {
         return DoubleUtils.getDoubleWithFourPlaces(simulation.getTrucksServedPerDay());
     }
 

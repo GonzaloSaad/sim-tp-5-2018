@@ -2,6 +2,7 @@ package utn.frc.sim.simulation;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import utn.frc.sim.generators.distributions.DistributionRandomGenerator;
 import utn.frc.sim.generators.distributions.NegativeExponentialDistributionGenerator;
 import utn.frc.sim.generators.distributions.NormalDistributionGenerator;
 import utn.frc.sim.generators.distributions.UniformDistributionGenerator;
@@ -32,17 +33,22 @@ public class Simulation {
     private int trucksServed;
     private Events lastEvent;
 
-    public Simulation() {
-        initSimulation();
+
+    private Simulation(SimulationType type) {
+        initSimulation(type);
     }
 
-    private void initSimulation() {
-        initClock();
+    public static Simulation ofType(SimulationType type){
+        return new Simulation(type);
+    }
+
+    private void initSimulation(SimulationType type) {
+        initClock(type);
         initStatisticsValues();
         initRecepcion();
         initBalanza();
         initDarsenas();
-        initClientGenerator();
+        initClientGenerator(type);
         initEvent();
     }
 
@@ -50,8 +56,14 @@ public class Simulation {
         lastEvent = Events.INICIO;
     }
 
-    private void initClock() {
-        clock = LocalDateTime.of(2018, 1, 1, 12, 0);
+    private void initClock(SimulationType type) {
+        int hourOfStart;
+        if(type == SimulationType.Type1){
+            hourOfStart = 12;
+        } else{
+            hourOfStart = 5;
+        }
+        clock = LocalDateTime.of(2018, 1, 1, hourOfStart, 0);
     }
 
     private void initStatisticsValues() {
@@ -61,13 +73,13 @@ public class Simulation {
 
     private void initRecepcion() {
         recepcionQueue = new LinkedList<>();
-        UniformDistributionGenerator generator = UniformDistributionGenerator.createOf(3, 7);
+        DistributionRandomGenerator generator = UniformDistributionGenerator.createOf(3, 7);
         recepcion = new Server("RECEPCION", generator);
     }
 
     private void initBalanza() {
         balanzaQueue = new LinkedList<>();
-        UniformDistributionGenerator generator = UniformDistributionGenerator.createOf(5, 7);
+        DistributionRandomGenerator generator = UniformDistributionGenerator.createOf(5, 7);
         balanza = new Server("BALANZA", generator);
     }
 
@@ -78,13 +90,18 @@ public class Simulation {
     }
 
     private Server createDarsenaForNumber(int number) {
-        UniformDistributionGenerator generator = UniformDistributionGenerator.createOf(15, 20);
+        DistributionRandomGenerator generator = UniformDistributionGenerator.createOf(15, 20);
         NormalDistributionGenerator generatorForInterruptions = NormalDistributionGenerator.createOf(10, Math.sqrt(1.2));
         return new ServerWithInterruptions("DARSENA_" + number, generator, 15, generatorForInterruptions);
     }
 
-    private void initClientGenerator() {
-        NegativeExponentialDistributionGenerator generator = NegativeExponentialDistributionGenerator.createOf(1 / 7.5);
+    private void initClientGenerator(SimulationType type) {
+        DistributionRandomGenerator generator;
+        if(type == SimulationType.Type1){
+            generator = NegativeExponentialDistributionGenerator.createOf(1 / 7.5);
+        } else {
+            generator = UniformDistributionGenerator.createOf(7, 8);
+        }
         clientGenerator = new ClientGenerator(clock, generator);
     }
 
@@ -184,7 +201,7 @@ public class Simulation {
             trucksServed++;
             logger.info("{} - Darsena finished. Client out: {}.", clock, finishedClient);
 
-            if(darsenaNumber == 1){
+            if (darsenaNumber == 1) {
                 lastEvent = Events.FIN_DARSENA_1;
             } else {
                 lastEvent = Events.FIN_DARSENA_2;
@@ -192,7 +209,7 @@ public class Simulation {
 
         } else {
             logger.info("{} - Darsena finished. No client.", clock);
-            if(darsenaNumber == 1){
+            if (darsenaNumber == 1) {
                 lastEvent = Events.FIN_DARSENA_1_CALIBRACION;
             } else {
                 lastEvent = Events.FIN_DARSENA_2_CALIBRACION;
@@ -207,7 +224,7 @@ public class Simulation {
     private void calculateAvgMinutesForTrucks(Client client) {
         int n = client.getClientNumber();
         long duration = client.getMinutesOfAttention();
-        avgMinutesPerTruck = ((double) 1/n) * ((n - 1) * avgMinutesPerTruck + duration);
+        avgMinutesPerTruck = ((double) 1 / n) * ((n - 1) * avgMinutesPerTruck + duration);
     }
 
     private LocalDateTime getNextEvent() {
@@ -249,19 +266,19 @@ public class Simulation {
         return firstTime;
     }
 
-    public double getAvgMinutesPerTruck(){
+    public double getAvgMinutesPerTruck() {
         return avgMinutesPerTruck;
     }
 
-    public double getTrucksServedPerDay(){
+    public double getTrucksServedPerDay() {
         return (double) trucksServed / clientGenerator.getDays();
     }
 
-    public int getDays(){
+    public int getDays() {
         return clientGenerator.getDays();
     }
 
-    public int getTrucksServed(){
+    public int getTrucksServed() {
         return trucksServed;
     }
 
