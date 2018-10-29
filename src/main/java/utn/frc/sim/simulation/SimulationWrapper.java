@@ -19,8 +19,12 @@ public class SimulationWrapper {
 
 
     /*
-    Reloj
+    Reloj y eventos.
      */
+
+    public String getLastEvent(){
+        return simulation.getLastEvent().toString();
+    }
 
     public String getClock() {
         return simulation.getClock().toString();

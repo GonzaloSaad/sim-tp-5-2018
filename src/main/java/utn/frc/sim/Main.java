@@ -24,7 +24,7 @@ public class Main extends Application {
         SimulationWrapper simulation = new SimulationWrapper(new Simulation());
         for (int i = 0; i < 30000; i++) {
             simulation.step();
+
         }
-        System.out.println(simulation.getAverageDurationOfService());
     }
 }
