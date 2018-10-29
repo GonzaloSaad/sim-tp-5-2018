@@ -35,6 +35,9 @@ public class SimulationWrapper {
         return simulation.getClock().toString();
     }
 
+    public String getNumberClient(){
+        return  Integer.toString(simulation.getClientOfEvent());
+    }
     /*
     Datos para clientes.
      */
@@ -46,6 +49,10 @@ public class SimulationWrapper {
         }
         return nextEvent.toString();
     }
+   // public  String getNumberCliente(){
+    //    return Integer.toString(simulation.;
+   // }
+
 
     /*
     Datos para recepcion.

@@ -32,6 +32,7 @@ public class Simulation {
     private double avgMinutesPerTruck;
     private int trucksServed;
     private Events lastEvent;
+    private int clientOfEvent;
 
 
     private Simulation(SimulationType type) {
@@ -120,6 +121,7 @@ public class Simulation {
             Client nextClient = clientGenerator.getNextClient();
             logger.info("{} - New client into the system. Client: {}.", clock, nextClient);
             //outsideQueue.add(nextClient);
+            clientOfEvent = nextClient.getClientNumber();
             if (recepcion.isFree()) {
                 nextClient.setInTime(clock);
                 recepcion.serveToClient(clock, nextClient);
@@ -139,6 +141,7 @@ public class Simulation {
             if (event.hasClient()) {
                 Client finishedClient = event.getClient();
                 logger.info("{} - Reception finished. Client: {}.", clock, finishedClient);
+                clientOfEvent = finishedClient.getClientNumber();
                 if (balanza.isFree()) {
                     balanza.serveToClient(clock, finishedClient);
                 } else {
@@ -154,6 +157,7 @@ public class Simulation {
         } else {
             handleEventFromBalanza(clock);
         }
+
     }
 
     private void handleEventFromBalanza(LocalDateTime clock) {
@@ -164,6 +168,7 @@ public class Simulation {
             if (event.hasClient()) {
                 Client finishedClient = event.getClient();
                 logger.info("{} - Balanza finished. Client: {}.", clock, finishedClient);
+                clientOfEvent = finishedClient.getClientNumber();
                 if (darsena_1.isFree()) {
                     darsena_1.serveToClient(clock, finishedClient);
                 } else if (darsena_2.isFree()) {
@@ -200,6 +205,7 @@ public class Simulation {
             calculateAvgMinutesForTrucks(finishedClient);
             trucksServed++;
             logger.info("{} - Darsena finished. Client out: {}.", clock, finishedClient);
+            clientOfEvent = finishedClient.getClientNumber();
 
             if (darsenaNumber == 1) {
                 lastEvent = Events.FIN_DARSENA_1;
@@ -227,7 +233,7 @@ public class Simulation {
         avgMinutesPerTruck = ((double) 1 / n) * ((n - 1) * avgMinutesPerTruck + duration);
     }
 
-    private LocalDateTime getNextEvent() {
+    private LocalDateTime  getNextEvent() {
 
         LocalDateTime firstTime = clientGenerator.getNextClientEvent();
 
@@ -324,5 +330,9 @@ public class Simulation {
 
     public ClientGenerator getClientGenerator() {
         return clientGenerator;
+    }
+
+    public int getClientOfEvent(){
+      return clientOfEvent;
     }
 }

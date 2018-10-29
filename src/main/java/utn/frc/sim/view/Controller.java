@@ -1,10 +1,11 @@
-package utn.frc.sim;
+package utn.frc.sim.view;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -16,9 +17,10 @@ import utn.frc.sim.util.Fila;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class Controller implements Initializable {
+public class Controller  {
 
 
+    private static  final int MAX_SIMULATION = 30;
 
     @FXML private TableColumn event;
     @FXML private TableColumn clock;
@@ -43,24 +45,27 @@ public class Controller implements Initializable {
     @FXML private TableColumn day;
     @FXML private TableColumn avg;
     @FXML private TableColumn truckXDayServed;
+    @FXML private MenuItem miSim1;
 
     @FXML private TableView tvSim;
     @FXML private AnchorPane panelSim1;
 
+//    private SimulationType type = new MainMenuController().getType();
+    SimulationWrapper simulation;
+    ObservableList<Fila> data ;
 
 
-    public void initialize(URL location, ResourceBundle resources) {
-       panelSim1.setVisible(true);
-    }
-    SimulationWrapper simulation = SimulationWrapper.ofType(SimulationType.Type1);
-    ObservableList<Fila> data = FXCollections.observableArrayList();
+
 @FXML
     void btnRunClick(ActionEvent event){
+    simulation = SimulationWrapper.ofType(MainMenuController.getType());
+    data  = FXCollections.observableArrayList();
 
-    for (int i = 0; i < 30000; i++) {
+    while (Integer.parseInt(simulation.getDay()) <= MAX_SIMULATION) {
+
         loadTable();
         simulation.step();
-        }
+    }
     }
 
     void loadTable(){
