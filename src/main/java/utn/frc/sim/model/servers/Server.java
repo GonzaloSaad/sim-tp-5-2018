@@ -13,10 +13,10 @@ public class Server {
     private static final String END_OF_ATTENTION = "FA";
     private static final String SEPARATOR = "-";
     private final String serverName;
-    private LocalDateTime nextEnd;
-    private Client servingClient;
+    protected LocalDateTime nextEnd;
+    protected Client servingClient;
     private DistributionRandomGenerator generator;
-    private ServerState state;
+    protected ServerState state;
 
     public Server(String serverName, DistributionRandomGenerator generator) {
         this.serverName = serverName;

@@ -1,18 +1,24 @@
 package utn.frc.sim.simulation;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import utn.frc.sim.generators.distributions.NegativeExponentialDistributionGenerator;
+import utn.frc.sim.generators.distributions.NormalDistributionGenerator;
 import utn.frc.sim.generators.distributions.UniformDistributionGenerator;
 import utn.frc.sim.model.Event;
 import utn.frc.sim.model.clients.Client;
 import utn.frc.sim.model.clients.ClientGenerator;
 import utn.frc.sim.model.servers.Server;
+import utn.frc.sim.model.servers.ServerWithInterruptions;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
 
 public class Simulation {
 
+    private static final Logger logger = LogManager.getLogger(Simulation.class);
     private LocalDateTime clock;
     private Server recepcion;
     private Queue<Client> receptionQueue;
@@ -21,8 +27,9 @@ public class Simulation {
     private Server darsena_1;
     private Server darsena_2;
     private Queue<Client> darsenaQueue;
+    private Queue<Client> outsideQueue;
     private ClientGenerator clientGenerator;
-
+    private double avgMinutesPerTruck;
 
     public Simulation() {
         initSimulation();
@@ -30,6 +37,7 @@ public class Simulation {
 
     private void initSimulation() {
         initClock();
+        initAvgMinutes();
         initRecepcion();
         initBalanza();
         initDarsenas();
@@ -37,7 +45,11 @@ public class Simulation {
     }
 
     private void initClock() {
-        clock = LocalDateTime.of(2018, 1, 1, 5, 0);
+        clock = LocalDateTime.of(2018, 1, 1, 12, 0);
+    }
+
+    private void initAvgMinutes() {
+        avgMinutesPerTruck = 0;
     }
 
     private void initRecepcion() {
@@ -60,7 +72,8 @@ public class Simulation {
 
     private Server createDarsenaForNumber(int number) {
         UniformDistributionGenerator generator = UniformDistributionGenerator.createOf(15, 20);
-        return new Server("DARSENA_" + number, generator);
+        NormalDistributionGenerator generatorForInterruptions = NormalDistributionGenerator.createOf(10, Math.sqrt(1.2));
+        return new ServerWithInterruptions("DARSENA_" + number, generator, 15, generatorForInterruptions);
     }
 
     private void initClientGenerator() {
@@ -80,13 +93,15 @@ public class Simulation {
     private void handleEventFromClients(LocalDateTime clock) {
         if (clientGenerator.isEventFrom(clock)) {
             Client nextClient = clientGenerator.getNextClient();
-            System.out.println("New client in the system. Client: " + nextClient.getClientNumber());
+            logger.info("{} - New client into the system. Client: {}.", clock, nextClient);
+            //outsideQueue.add(nextClient);
             if (recepcion.isFree()) {
                 nextClient.setInTime(clock);
                 recepcion.serveToClient(clock, nextClient);
             } else {
                 receptionQueue.add(nextClient);
             }
+
         } else {
             handleEventFromRecepcion(clock);
         }
@@ -97,7 +112,7 @@ public class Simulation {
             Event event = recepcion.getEvent();
             if (event.hasClient()) {
                 Client finishedClient = event.getClient();
-
+                logger.info("{} - Reception finished. Client: {}.", clock, finishedClient);
                 if (balanza.isFree()) {
                     balanza.serveToClient(clock, finishedClient);
                 } else {
@@ -121,7 +136,7 @@ public class Simulation {
             Event event = balanza.getEvent();
             if (event.hasClient()) {
                 Client finishedClient = event.getClient();
-
+                logger.info("{} - Balanza finished. Client: {}.", clock, finishedClient);
                 if (darsena_1.isFree()) {
                     darsena_1.serveToClient(clock, finishedClient);
                 } else if (darsena_2.isFree()) {
@@ -143,31 +158,42 @@ public class Simulation {
     private void handleEventFromDarsenas(LocalDateTime clock) {
         if (darsena_1.isEventFrom(clock)) {
             handleEventForDarsena(clock, darsena_1);
-        } else if (darsena_2.isEventFrom(clock)){
+        } else if (darsena_2.isEventFrom(clock)) {
             handleEventForDarsena(clock, darsena_2);
         } else {
             throw new RuntimeException();
         }
     }
 
-    private void handleEventForDarsena(LocalDateTime clock, Server darsena){
+    private void handleEventForDarsena(LocalDateTime clock, Server darsena) {
         Event event = darsena.getEvent();
         if (event.hasClient()) {
             Client finishedClient = event.getClient();
             finishedClient.setOutTime(clock);
-            System.out.println("Client out. Client: " + finishedClient + ".");
+            calculateAvgMinutesForTrucks(finishedClient);
+            logger.info("{} - Darsena finished. Client out: {}.", clock, finishedClient);
+        } else {
+            logger.info("{} - Darsena finished. No client.", clock);
         }
-
-        if(!darsenaQueue.isEmpty()){
+        if (!darsenaQueue.isEmpty() && darsena.isFree()) {
             Client nextClient = darsenaQueue.poll();
             darsena.serveToClient(clock, nextClient);
         }
     }
 
+    private void calculateAvgMinutesForTrucks(Client client) {
+        int n = client.getClientNumber();
+        long duration = client.getMinutesOfAttention();
+        avgMinutesPerTruck = ((double) 1/n) * ((n - 1) * avgMinutesPerTruck + duration);
+    }
 
     private LocalDateTime getNextEvent() {
 
         LocalDateTime firstTime = clientGenerator.getNextClientEvent();
+
+        if (clock.getDayOfYear() < firstTime.getDayOfYear()) {
+
+        }
 
         if (recepcion.getNextEnd().isPresent()) {
             LocalDateTime recepcionTime = recepcion.getNextEnd().get();

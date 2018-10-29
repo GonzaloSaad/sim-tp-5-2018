@@ -1,6 +1,7 @@
 package utn.frc.sim.model.clients;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 
 public class Client {
     private int clientNumber;
@@ -30,6 +31,13 @@ public class Client {
 
     public void setOutTime(LocalDateTime outTime) {
         this.outTime = outTime;
+    }
+
+    public long getMinutesOfAttention(){
+        if (inTime == null || outTime == null){
+            throw new IllegalStateException();
+        }
+        return ChronoUnit.MINUTES.between(inTime, outTime);
     }
 
     @Override
