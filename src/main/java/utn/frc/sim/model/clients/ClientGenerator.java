@@ -43,4 +43,8 @@ public class ClientGenerator {
     public boolean isEventFrom(LocalDateTime clock){
         return nextClientEvent.equals(clock);
     }
+
+    public int getDays(){
+        return day;
+    }
 }

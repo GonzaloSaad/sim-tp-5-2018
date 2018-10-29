@@ -12,7 +12,6 @@ import utn.frc.sim.model.servers.Server;
 import utn.frc.sim.model.servers.ServerWithInterruptions;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -30,6 +29,7 @@ public class Simulation {
     private Queue<Client> outsideQueue;
     private ClientGenerator clientGenerator;
     private double avgMinutesPerTruck;
+    private long trucksServed;
 
     public Simulation() {
         initSimulation();
@@ -37,7 +37,7 @@ public class Simulation {
 
     private void initSimulation() {
         initClock();
-        initAvgMinutes();
+        initStatisticsValues();
         initRecepcion();
         initBalanza();
         initDarsenas();
@@ -48,8 +48,9 @@ public class Simulation {
         clock = LocalDateTime.of(2018, 1, 1, 12, 0);
     }
 
-    private void initAvgMinutes() {
+    private void initStatisticsValues() {
         avgMinutesPerTruck = 0;
+        trucksServed = 0;
     }
 
     private void initRecepcion() {
@@ -171,6 +172,7 @@ public class Simulation {
             Client finishedClient = event.getClient();
             finishedClient.setOutTime(clock);
             calculateAvgMinutesForTrucks(finishedClient);
+            trucksServed++;
             logger.info("{} - Darsena finished. Client out: {}.", clock, finishedClient);
         } else {
             logger.info("{} - Darsena finished. No client.", clock);
@@ -185,6 +187,14 @@ public class Simulation {
         int n = client.getClientNumber();
         long duration = client.getMinutesOfAttention();
         avgMinutesPerTruck = ((double) 1/n) * ((n - 1) * avgMinutesPerTruck + duration);
+    }
+
+    private double getAvgMinutesPerTruck(){
+        return avgMinutesPerTruck;
+    }
+
+    private double getTrucksServedPerDay(){
+        return (double) trucksServed / clientGenerator.getDays();
     }
 
     private LocalDateTime getNextEvent() {
