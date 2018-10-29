@@ -45,12 +45,11 @@ public class Controller  {
     @FXML private TableColumn day;
     @FXML private TableColumn avg;
     @FXML private TableColumn truckXDayServed;
-    @FXML private MenuItem miSim1;
+
 
     @FXML private TableView tvSim;
     @FXML private AnchorPane panelSim1;
 
-//    private SimulationType type = new MainMenuController().getType();
     SimulationWrapper simulation;
     ObservableList<Fila> data ;
 
