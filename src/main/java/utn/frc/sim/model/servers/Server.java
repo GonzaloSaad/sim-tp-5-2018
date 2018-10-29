@@ -24,23 +24,33 @@ public class Server {
         this.state = ServerState.LBR;
     }
 
-    public Optional<LocalDateTime> getNextEnd() {
-        return Optional.ofNullable(nextEnd);
-    }
-
-    public void serveToClient(LocalDateTime clock, Client client){
+    public void serveToClient(LocalDateTime clock, Client client) {
         servingClient = client;
         nextEnd = clock.plus((int) generator.random(), ChronoUnit.MINUTES);
         state = ServerState.OCP;
     }
 
-    public Event getEvent(){
-        nextEnd = null;
+    public Event getEvent() {
+        Event event = new Event(servingClient);
         state = ServerState.LBR;
-        return new Event(servingClient);
+        nextEnd = null;
+        servingClient = null;
+        return event;
     }
 
-    public boolean isFree(){
+    public Optional<LocalDateTime> getNextEnd() {
+        return Optional.ofNullable(nextEnd);
+    }
+
+    public Optional<Client> getServingClient() {
+        return Optional.ofNullable(servingClient);
+    }
+
+    public ServerState getState() {
+        return state;
+    }
+
+    public boolean isFree() {
         return state == ServerState.LBR;
     }
 
@@ -48,7 +58,7 @@ public class Server {
         return nextEnd != null && nextEnd.equals(clock);
     }
 
-    private String getFinalEventDescription(){
+    private String getFinalEventDescription() {
         return END_OF_ATTENTION + SEPARATOR + serverName;
     }
 }

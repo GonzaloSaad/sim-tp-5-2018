@@ -20,7 +20,7 @@ public class Simulation {
     private static final Logger logger = LogManager.getLogger(Simulation.class);
     private LocalDateTime clock;
     private Server recepcion;
-    private Queue<Client> receptionQueue;
+    private Queue<Client> recepcionQueue;
     private Server balanza;
     private Queue<Client> balanzaQueue;
     private Server darsena_1;
@@ -29,7 +29,8 @@ public class Simulation {
     private Queue<Client> outsideQueue;
     private ClientGenerator clientGenerator;
     private double avgMinutesPerTruck;
-    private long trucksServed;
+    private int trucksServed;
+    private Events lastEvent;
 
     public Simulation() {
         initSimulation();
@@ -42,6 +43,11 @@ public class Simulation {
         initBalanza();
         initDarsenas();
         initClientGenerator();
+        initEvent();
+    }
+
+    private void initEvent() {
+        lastEvent = Events.INICIO;
     }
 
     private void initClock() {
@@ -54,7 +60,7 @@ public class Simulation {
     }
 
     private void initRecepcion() {
-        receptionQueue = new LinkedList<>();
+        recepcionQueue = new LinkedList<>();
         UniformDistributionGenerator generator = UniformDistributionGenerator.createOf(3, 7);
         recepcion = new Server("RECEPCION", generator);
     }
@@ -93,6 +99,7 @@ public class Simulation {
 
     private void handleEventFromClients(LocalDateTime clock) {
         if (clientGenerator.isEventFrom(clock)) {
+            lastEvent = Events.LLEGADA_CLIENTE;
             Client nextClient = clientGenerator.getNextClient();
             logger.info("{} - New client into the system. Client: {}.", clock, nextClient);
             //outsideQueue.add(nextClient);
@@ -100,7 +107,7 @@ public class Simulation {
                 nextClient.setInTime(clock);
                 recepcion.serveToClient(clock, nextClient);
             } else {
-                receptionQueue.add(nextClient);
+                recepcionQueue.add(nextClient);
             }
 
         } else {
@@ -110,6 +117,7 @@ public class Simulation {
 
     private void handleEventFromRecepcion(LocalDateTime clock) {
         if (recepcion.isEventFrom(clock)) {
+            lastEvent = Events.FIN_RECEPCION;
             Event event = recepcion.getEvent();
             if (event.hasClient()) {
                 Client finishedClient = event.getClient();
@@ -120,8 +128,8 @@ public class Simulation {
                     balanzaQueue.add(finishedClient);
                 }
 
-                if (!receptionQueue.isEmpty()) {
-                    Client nextClientForRecepcion = receptionQueue.poll();
+                if (!recepcionQueue.isEmpty()) {
+                    Client nextClientForRecepcion = recepcionQueue.poll();
                     nextClientForRecepcion.setInTime(clock);
                     recepcion.serveToClient(clock, nextClientForRecepcion);
                 }
@@ -134,6 +142,7 @@ public class Simulation {
     private void handleEventFromBalanza(LocalDateTime clock) {
 
         if (balanza.isEventFrom(clock)) {
+            lastEvent = Events.FIN_BALANZA;
             Event event = balanza.getEvent();
             if (event.hasClient()) {
                 Client finishedClient = event.getClient();
@@ -158,15 +167,15 @@ public class Simulation {
 
     private void handleEventFromDarsenas(LocalDateTime clock) {
         if (darsena_1.isEventFrom(clock)) {
-            handleEventForDarsena(clock, darsena_1);
+            handleEventForDarsena(clock, darsena_1, 1);
         } else if (darsena_2.isEventFrom(clock)) {
-            handleEventForDarsena(clock, darsena_2);
+            handleEventForDarsena(clock, darsena_2, 2);
         } else {
             throw new RuntimeException();
         }
     }
 
-    private void handleEventForDarsena(LocalDateTime clock, Server darsena) {
+    private void handleEventForDarsena(LocalDateTime clock, Server darsena, int darsenaNumber) {
         Event event = darsena.getEvent();
         if (event.hasClient()) {
             Client finishedClient = event.getClient();
@@ -174,8 +183,20 @@ public class Simulation {
             calculateAvgMinutesForTrucks(finishedClient);
             trucksServed++;
             logger.info("{} - Darsena finished. Client out: {}.", clock, finishedClient);
+
+            if(darsenaNumber == 1){
+                lastEvent = Events.FIN_DARSENA_1;
+            } else {
+                lastEvent = Events.FIN_DARSENA_2;
+            }
+
         } else {
             logger.info("{} - Darsena finished. No client.", clock);
+            if(darsenaNumber == 1){
+                lastEvent = Events.FIN_DARSENA_1_CALIBRACION;
+            } else {
+                lastEvent = Events.FIN_DARSENA_2_CALIBRACION;
+            }
         }
         if (!darsenaQueue.isEmpty() && darsena.isFree()) {
             Client nextClient = darsenaQueue.poll();
@@ -187,14 +208,6 @@ public class Simulation {
         int n = client.getClientNumber();
         long duration = client.getMinutesOfAttention();
         avgMinutesPerTruck = ((double) 1/n) * ((n - 1) * avgMinutesPerTruck + duration);
-    }
-
-    private double getAvgMinutesPerTruck(){
-        return avgMinutesPerTruck;
-    }
-
-    private double getTrucksServedPerDay(){
-        return (double) trucksServed / clientGenerator.getDays();
     }
 
     private LocalDateTime getNextEvent() {
@@ -234,5 +247,65 @@ public class Simulation {
         }
 
         return firstTime;
+    }
+
+    public double getAvgMinutesPerTruck(){
+        return avgMinutesPerTruck;
+    }
+
+    public double getTrucksServedPerDay(){
+        return (double) trucksServed / clientGenerator.getDays();
+    }
+
+    public int getDays(){
+        return clientGenerator.getDays();
+    }
+
+    public int getTrucksServed(){
+        return trucksServed;
+    }
+
+    public LocalDateTime getClock() {
+        return clock;
+    }
+
+    public Events getLastEvent() {
+        return lastEvent;
+    }
+
+    public Server getRecepcion() {
+        return recepcion;
+    }
+
+    public Queue<Client> getRecepcionQueue() {
+        return recepcionQueue;
+    }
+
+    public Server getBalanza() {
+        return balanza;
+    }
+
+    public Queue<Client> getBalanzaQueue() {
+        return balanzaQueue;
+    }
+
+    public Server getDarsena_1() {
+        return darsena_1;
+    }
+
+    public Server getDarsena_2() {
+        return darsena_2;
+    }
+
+    public Queue<Client> getDarsenaQueue() {
+        return darsenaQueue;
+    }
+
+    public Queue<Client> getOutsideQueue() {
+        return outsideQueue;
+    }
+
+    public ClientGenerator getClientGenerator() {
+        return clientGenerator;
     }
 }
