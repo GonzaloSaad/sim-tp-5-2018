@@ -126,7 +126,7 @@ public class Simulation {
     private void handleEventFromFirstEvent(LocalDateTime clock) throws SimulationFinishedException {
         if (dayFirstEvent.isEqual(clock)) {
 
-            if(day > limitOfSimulations){
+            if (day > limitOfSimulations) {
                 throw new SimulationFinishedException();
             }
             logger.info("{} - Day start.", clock);
