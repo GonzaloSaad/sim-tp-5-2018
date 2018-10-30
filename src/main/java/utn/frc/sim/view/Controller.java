@@ -4,18 +4,13 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
-import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
-import utn.frc.sim.simulation.SimulationType;
 import utn.frc.sim.simulation.SimulationWrapper;
 import utn.frc.sim.util.Fila;
-
-import java.net.URL;
-import java.util.ResourceBundle;
+import utn.frc.sim.util.Fila2;
 
 public class Controller  {
 
@@ -48,10 +43,12 @@ public class Controller  {
 
 
     @FXML private TableView tvSim;
+    @FXML private TableView tvSim2;
     @FXML private AnchorPane panelSim1;
 
     SimulationWrapper simulation;
-    ObservableList<Fila> data ;
+    ObservableList<Fila> data;
+    ObservableList<Fila2> data2;
 
 
 
@@ -59,6 +56,7 @@ public class Controller  {
     void btnRunClick(ActionEvent event){
     simulation = SimulationWrapper.ofType(MainMenuController.getType());
     data  = FXCollections.observableArrayList();
+    data2  = FXCollections.observableArrayList();
 
     while (Integer.parseInt(simulation.getDay()) <= MAX_SIMULATION) {
 
@@ -69,7 +67,7 @@ public class Controller  {
 
     void loadTable(){
 
-       String event1 = simulation.getLastEvent();
+        String event1 = simulation.getLastEvent();
         String clock1 =simulation.getClock();
         String trucks1 = simulation.getNumberClient();
         String nextArrival1=simulation.getNextClientEvent();
@@ -96,7 +94,9 @@ public class Controller  {
         data.addAll(new Fila(event1,clock1,trucks1,nextArrival1,stateReception1,
                 truckRec1,endRec1,queueRec1,stateBal1,truckBal1, endBal1,
                 queueBal1,stateDar11,truckDar11,  endDar11, stateDar21,
-                truckDar21, endDar21, queueDar1,truckServed1, day1, avg1, truckXDayServed1));
+                truckDar21, endDar21, queueDar1));
+
+        data2.addAll(new Fila2(truckServed1, day1, avg1, truckXDayServed1));
 
         event.setCellValueFactory(new PropertyValueFactory<Fila,String>("event"));
         clock.setCellValueFactory(new PropertyValueFactory<Fila,String>("clock"));
@@ -123,5 +123,6 @@ public class Controller  {
         truckXDayServed.setCellValueFactory(new PropertyValueFactory<Fila,String>("truckXDayServed"));
 
         tvSim.setItems(data);
+        tvSim2.setItems(data2);
     }
 }

@@ -44,7 +44,7 @@ public class MainMenuController {
 
         private void setSimulationDialog() {
             try {
-                paneMain.getChildren().setAll((AnchorPane) FXMLLoader.load(getClass().getResource("/views/sim1.fxml")));
+                paneMain.getChildren().setAll((AnchorPane) FXMLLoader.load(getClass().getResource("/views/simulations/sim1.fxml")));
             } catch (IOException e) {
                 logger.error("Problem opening SimulacionDialog.", e);
             }
@@ -52,7 +52,7 @@ public class MainMenuController {
 
         private void setSimulation2Dialog() {
             try {
-                paneMain.getChildren().setAll((AnchorPane) FXMLLoader.load(getClass().getResource("/views/sim1.fxml")));
+                paneMain.getChildren().setAll((AnchorPane) FXMLLoader.load(getClass().getResource("/views/simulations/sim1.fxml")));
             } catch (IOException e) {
                 logger.error("Problem opening AutomaticDialog.", e);
             }

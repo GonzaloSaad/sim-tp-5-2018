@@ -18,7 +18,7 @@ public class Main extends Application {
 
         Parent root = FXMLLoader.load(getClass().getResource("/views/menu/main-menu.fxml"));
         primaryStage.setTitle("Hello CIDS");
-        primaryStage.setScene(new Scene(root, 1024, 600));
+        primaryStage.setScene(new Scene(root, 1200, 600));
         primaryStage.setOnCloseRequest(e -> forceClose());
         primaryStage.show();
 
