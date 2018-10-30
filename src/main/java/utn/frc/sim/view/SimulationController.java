@@ -13,10 +13,11 @@ import org.apache.logging.log4j.Logger;
 import utn.frc.sim.simulation.SimulationFinishedException;
 import utn.frc.sim.simulation.SimulationWrapper;
 import utn.frc.sim.util.Fila;
+import utn.frc.sim.util.Fila2;
 
-public class Controller {
+public class SimulationController {
 
-    private static final Logger logger = LogManager.getLogger(Controller.class);
+    private static final Logger logger = LogManager.getLogger(SimulationController.class);
     private static final int MAX_SIMULATION = 30;
 
     @FXML
@@ -71,20 +72,25 @@ public class Controller {
     private TableView<Fila> tvSim;
 
     @FXML
+    private TableView tvSim2;
+
+    @FXML
     private AnchorPane panelSim1;
 
     private SimulationWrapper simulation;
     private ObservableList<Fila> data;
-
+    private ObservableList<Fila2> data2;
 
     @FXML
     void btnRunClick(ActionEvent event) {
         runSimulation();
     }
 
+
     private void runSimulation() {
         simulation = SimulationWrapper.ofType(MainMenuController.getType(), MAX_SIMULATION);
         data = FXCollections.observableArrayList();
+        data2 = FXCollections.observableArrayList();
 
         logger.info("Initializing simulation of {} days.", MAX_SIMULATION);
         while (true) {
@@ -127,7 +133,9 @@ public class Controller {
         data.addAll(new Fila(event1, clock1, trucks1, nextArrival1, stateReception1,
                 truckRec1, endRec1, queueRec1, stateBal1, truckBal1, endBal1,
                 queueBal1, stateDar11, truckDar11, endDar11, stateDar21,
-                truckDar21, endDar21, queueDar1, truckServed1, day1, avg1, truckXDayServed1));
+                truckDar21, endDar21, queueDar1));
+
+        data2.addAll(new Fila2(truckServed1, day1, avg1, truckXDayServed1));
 
         event.setCellValueFactory(new PropertyValueFactory<Fila, String>("event"));
         clock.setCellValueFactory(new PropertyValueFactory<Fila, String>("clock"));
@@ -154,5 +162,6 @@ public class Controller {
         truckXDayServed.setCellValueFactory(new PropertyValueFactory<Fila, String>("truckXDayServed"));
 
         tvSim.setItems(data);
+        tvSim2.setItems(data2);
     }
 }
