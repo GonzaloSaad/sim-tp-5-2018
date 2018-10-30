@@ -6,6 +6,7 @@ import utn.frc.sim.generators.distributions.DistributionRandomGenerator;
 import utn.frc.sim.generators.distributions.NegativeExponentialDistributionGenerator;
 import utn.frc.sim.generators.distributions.NormalDistributionGenerator;
 import utn.frc.sim.generators.distributions.UniformDistributionGenerator;
+import utn.frc.sim.model.Day;
 import utn.frc.sim.model.Event;
 import utn.frc.sim.model.clients.Client;
 import utn.frc.sim.model.clients.ClientGenerator;
@@ -14,9 +15,7 @@ import utn.frc.sim.model.servers.ServerWithInterruptions;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.LinkedList;
-import java.util.Optional;
-import java.util.Queue;
+import java.util.*;
 
 public class Simulation {
 
@@ -39,6 +38,7 @@ public class Simulation {
     private Client clientOfEvent;
     private int day;
     private int limitOfSimulations;
+    private ArrayList<Day> days;
 
 
     private Simulation(SimulationType type, int days) {
@@ -68,6 +68,7 @@ public class Simulation {
     private void initFirstEventOfDay() {
         day = 1;
         dayFirstEvent = LocalDateTime.of(2018, 1, 1, 5, 0);
+        days = new ArrayList<Day>();
     }
 
     private void initStatisticsValues() {
@@ -247,6 +248,7 @@ public class Simulation {
             trucksServed++;
             calculateAvgMinutesForTrucks(finishedClient);
             clientOfEvent = finishedClient;
+            days.add(new Day(getDay(), getAvgMinutesPerTruck(), getAvgTrucksOutside(), getTrucksServed()));
             logger.info("{} - Darsena {} finished. Client out: {}.", clock, darsenaNumber, finishedClient);
 
             if (darsenaNumber == 1) {
@@ -385,5 +387,9 @@ public class Simulation {
 
     public Optional<Client> getClientOfEvent() {
         return Optional.ofNullable(clientOfEvent);
+    }
+
+    public ArrayList<Day> getDays() {
+        return days;
     }
 }

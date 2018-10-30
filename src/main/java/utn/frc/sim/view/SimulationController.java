@@ -149,6 +149,7 @@ public class SimulationController {
                     runOneStepAndAddToTable();
                 } catch (SimulationFinishedException e) {
                     logger.info("Simulation finished.");
+                    System.out.println(simulation.getDays());
                     break;
                 }
             }
