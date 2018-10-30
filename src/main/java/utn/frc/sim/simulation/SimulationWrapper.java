@@ -5,6 +5,7 @@ import utn.frc.sim.util.DoubleUtils;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 
 public class SimulationWrapper {
 
@@ -182,7 +183,7 @@ public class SimulationWrapper {
         return DoubleUtils.getDoubleWithFourPlaces(simulation.getTrucksServedPerDay());
     }
 
-    public ArrayList<Day> getDays() {
+    public List<Day> getDays() {
         return simulation.getDays();
     }
 }
