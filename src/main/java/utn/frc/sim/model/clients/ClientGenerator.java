@@ -39,7 +39,9 @@ public class ClientGenerator {
     public LocalDateTime getNextClientEvent() {
         return nextClientEvent;
     }
-
+    public int getLastClient(){
+        return lastClient;
+}
     public boolean isEventFrom(LocalDateTime clock){
         return nextClientEvent.equals(clock);
     }

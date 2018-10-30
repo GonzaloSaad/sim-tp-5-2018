@@ -14,11 +14,11 @@ public class SimulationWrapper {
         this.simulation = simulation;
     }
 
-    public static SimulationWrapper ofType(SimulationType type) {
-        return new SimulationWrapper(Simulation.ofType(type));
+    public static SimulationWrapper ofType(SimulationType type, int days) {
+        return new SimulationWrapper(Simulation.ofType(type, days));
     }
 
-    public void step() {
+    public void step() throws SimulationFinishedException {
         simulation.step();
     }
 
@@ -28,13 +28,18 @@ public class SimulationWrapper {
      */
 
     public String getLastEvent() {
-        return simulation.getLastEvent().toString();
+        return simulation.getLastEventDescription().toString();
     }
 
     public String getClock() {
         return simulation.getClock().toString();
     }
 
+    public String getNumberClient(){
+        return simulation.getClientOfEvent()
+                .map(client -> Integer.toString(client.getClientNumber()))
+                .orElse(NONE_SYMBOL);
+    }
     /*
     Datos para clientes.
      */
@@ -46,6 +51,10 @@ public class SimulationWrapper {
         }
         return nextEvent.toString();
     }
+   // public  String getNumberCliente(){
+    //    return Integer.toString(simulation.;
+   // }
+
 
     /*
     Datos para recepcion.
@@ -98,36 +107,36 @@ public class SimulationWrapper {
      */
 
     public String getDarsena1State() {
-        return simulation.getDarsena_1().getState().toString();
+        return simulation.getDarsena1().getState().toString();
     }
 
     public String getDarsena1Client() {
-        return simulation.getDarsena_1()
+        return simulation.getDarsena1()
                 .getServingClient()
                 .map(client -> Integer.toString(client.getClientNumber()))
                 .orElse(NONE_SYMBOL);
     }
 
     public String getgetDarsena1NextEvent() {
-        return simulation.getDarsena_1().getNextEnd().map(LocalDateTime::toString).orElse(NONE_SYMBOL);
+        return simulation.getDarsena1().getNextEnd().map(LocalDateTime::toString).orElse(NONE_SYMBOL);
     }
 
     /*
     Datos para Darsena 2.
      */
     public String getDarsena2State() {
-        return simulation.getDarsena_2().getState().toString();
+        return simulation.getDarsena2().getState().toString();
     }
 
     public String getDarsena2Client() {
-        return simulation.getDarsena_2()
+        return simulation.getDarsena2()
                 .getServingClient()
                 .map(client -> Integer.toString(client.getClientNumber()))
                 .orElse(NONE_SYMBOL);
     }
 
     public String getgetDarsena2NextEvent() {
-        return simulation.getDarsena_2().getNextEnd().map(LocalDateTime::toString).orElse(NONE_SYMBOL);
+        return simulation.getDarsena2().getNextEnd().map(LocalDateTime::toString).orElse(NONE_SYMBOL);
     }
 
     /*
@@ -167,7 +176,7 @@ public class SimulationWrapper {
         return DoubleUtils.getDoubleWithFourPlaces(simulation.getAvgTrucksOutside());
     }
 
-    public String getAverageTrucksServedPerDay() {
+    public String getTrucksServedPerDay() {
         return DoubleUtils.getDoubleWithFourPlaces(simulation.getTrucksServedPerDay());
     }
 

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="600.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="utn.frc.sim.view.MainMenuController">
+   <children>
+      <MenuBar prefHeight="25.0" prefWidth="335.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <menus>
+          <Menu mnemonicParsing="false" text="Sistema de Colas">
+            <items>
+              <MenuItem fx:id="miSim1" mnemonicParsing="false" onAction="#openSimulation1" text="Simulación 1" />
+                  <MenuItem fx:id="miSim2" mnemonicParsing="false" onAction="#openSimulation12" text="Simulación 2" />
+                  <MenuItem mnemonicParsing="false" onAction="#openEssayInfoDialog" text="Información de trabajo" />
+            </items>
+          </Menu>
+        </menus>
+      </MenuBar>
+      <Pane fx:id="paneMain" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="35.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="25.0">
+         <children>
+            <Label alignment="CENTER" contentDisplay="CENTER" layoutX="429.0" layoutY="187.0" prefHeight="35.0" prefWidth="341.0" text="Trabajo Práctico N° 5" underline="true">
+               <font>
+                  <Font name="System Bold" size="24.0" />
+               </font>
+            </Label>
+            <Label alignment="CENTER" layoutX="475.0" layoutY="143.0" prefHeight="30.0" prefWidth="249.0" text="Simulación curso 4K4" textAlignment="CENTER">
+               <font>
+                  <Font name="System Bold" size="18.0" />
+               </font>
+            </Label>
+            <Label alignment="CENTER" layoutX="475.0" layoutY="214.0" prefHeight="79.0" prefWidth="249.0" text="&quot;Sistema de Colas&quot;" textAlignment="CENTER" wrapText="true">
+               <font>
+                  <Font size="24.0" />
+               </font>
+            </Label>
+            <Label alignment="CENTER" contentDisplay="CENTER" layoutX="408.0" layoutY="293.0" prefHeight="161.0" prefWidth="384.0" text="Santiago Argüello&#9;&#9;69966&#10;José I. Caffaratti&#9;&#9;58333&#10;Gonzalo Saad&#9;&#9;&#9;70785&#10;Andrés Acosta&#9;&#9;&#9;59434&#10;Juan M. Antonellini&#9;&#9;63029" textAlignment="CENTER" wrapText="true">
+               <font>
+                  <Font name="System Bold" size="18.0" />
+               </font>
+            </Label>
+         </children>
+      </Pane>
+      <Pane prefHeight="35.0" prefWidth="1024.0" style="-fx-background-color: #d7e1f2;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+         <children>
+            <Label layoutX="681.0" layoutY="6.0" prefHeight="17.0" prefWidth="473.0" text="Acosta, Antonellini, Argüello, Caffaratti, Saad - Grupo 6 Copyright ©" />
+         </children>
+      </Pane>
+   </children>
+</AnchorPane>

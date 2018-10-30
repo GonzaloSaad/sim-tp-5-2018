@@ -15,6 +15,7 @@ import utn.frc.sim.model.servers.ServerWithInterruptions;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.LinkedList;
+import java.util.Optional;
 import java.util.Queue;
 
 public class Simulation {
@@ -34,19 +35,22 @@ public class Simulation {
     private double avgMinutesPerTruck;
     private double avgTrucksOutside;
     private int trucksServed;
-    private Events lastEvent;
+    private Events lastEventDescription;
+    private Client clientOfEvent;
     private int day;
+    private int limitOfSimulations;
 
 
-    private Simulation(SimulationType type) {
-        initSimulation(type);
+    private Simulation(SimulationType type, int days) {
+        initSimulation(type, days);
     }
 
-    public static Simulation ofType(SimulationType type) {
-        return new Simulation(type);
+    public static Simulation ofType(SimulationType type, int days) {
+        return new Simulation(type, days);
     }
 
-    private void initSimulation(SimulationType type) {
+    private void initSimulation(SimulationType type, int days) {
+        limitOfSimulations = days;
         initFirstEventOfDay();
         initStatisticsValues();
         initRecepcion();
@@ -58,7 +62,7 @@ public class Simulation {
     }
 
     private void initEvent() {
-        lastEvent = Events.INICIO;
+        lastEventDescription = Events.INICIO;
     }
 
     private void initFirstEventOfDay() {
@@ -114,16 +118,21 @@ public class Simulation {
         outsideQueue = new LinkedList<>();
     }
 
-    public void step() {
+    public void step() throws SimulationFinishedException {
         clock = getNextEvent();
         handleEventFromFirstEvent(clock);
     }
 
-    private void handleEventFromFirstEvent(LocalDateTime clock) {
+    private void handleEventFromFirstEvent(LocalDateTime clock) throws SimulationFinishedException {
         if (dayFirstEvent.isEqual(clock)) {
+
+            if(day > limitOfSimulations){
+                throw new SimulationFinishedException();
+            }
             logger.info("{} - Day start.", clock);
-            lastEvent = Events.INICIO_DEL_DIA;
+            lastEventDescription = Events.INICIO_DEL_DIA;
             dayFirstEvent = dayFirstEvent.plus(1, ChronoUnit.DAYS);
+            clientOfEvent = null;
             calculateAvgTrucksOutside();
             day++;
 
@@ -144,8 +153,10 @@ public class Simulation {
 
     private void handleEventFromClients(LocalDateTime clock) {
         if (clientGenerator.isEventFrom(clock)) {
-            lastEvent = Events.LLEGADA_CLIENTE;
+            lastEventDescription = Events.LLEGADA_CLIENTE;
             Client nextClient = clientGenerator.getNextClient();
+            logger.info("{} - New client into the system. Client: {}.", clock, nextClient);
+            clientOfEvent = nextClient;
 
             if (clock.getHour() >= 18) {
                 logger.info("{} - New client. Hour > 18. Going to wait ouside. Client: {}.", clock, nextClient);
@@ -168,11 +179,12 @@ public class Simulation {
 
     private void handleEventFromRecepcion(LocalDateTime clock) {
         if (recepcion.isEventFrom(clock)) {
-            lastEvent = Events.FIN_RECEPCION;
+            lastEventDescription = Events.FIN_RECEPCION;
             Event event = recepcion.getEvent();
             if (event.hasClient()) {
                 Client finishedClient = event.getClient();
                 logger.info("{} - Reception finished. Client: {}.", clock, finishedClient);
+                clientOfEvent = finishedClient;
                 if (balanza.isFree()) {
                     balanza.serveToClient(clock, finishedClient);
                 } else {
@@ -188,16 +200,18 @@ public class Simulation {
         } else {
             handleEventFromBalanza(clock);
         }
+
     }
 
     private void handleEventFromBalanza(LocalDateTime clock) {
 
         if (balanza.isEventFrom(clock)) {
-            lastEvent = Events.FIN_BALANZA;
+            lastEventDescription = Events.FIN_BALANZA;
             Event event = balanza.getEvent();
             if (event.hasClient()) {
                 Client finishedClient = event.getClient();
                 logger.info("{} - Balanza finished. Client: {}.", clock, finishedClient);
+                clientOfEvent = finishedClient;
                 if (darsena_1.isFree()) {
                     darsena_1.serveToClient(clock, finishedClient);
                 } else if (darsena_2.isFree()) {
@@ -233,20 +247,22 @@ public class Simulation {
             finishedClient.setOutTime(clock);
             trucksServed++;
             calculateAvgMinutesForTrucks(finishedClient);
+            clientOfEvent = finishedClient;
             logger.info("{} - Darsena {} finished. Client out: {}.", clock, darsenaNumber, finishedClient);
 
             if (darsenaNumber == 1) {
-                lastEvent = Events.FIN_DARSENA_1;
+                lastEventDescription = Events.FIN_DARSENA_1;
             } else {
-                lastEvent = Events.FIN_DARSENA_2;
+                lastEventDescription = Events.FIN_DARSENA_2;
             }
 
         } else {
+            clientOfEvent = null;
             logger.info("{} - Darsena {} finished. No client. Just calibration.", clock, darsenaNumber);
             if (darsenaNumber == 1) {
-                lastEvent = Events.FIN_DARSENA_1_CALIBRACION;
+                lastEventDescription = Events.FIN_DARSENA_1_CALIBRACION;
             } else {
-                lastEvent = Events.FIN_DARSENA_2_CALIBRACION;
+                lastEventDescription = Events.FIN_DARSENA_2_CALIBRACION;
             }
         }
         if (!darsenaQueue.isEmpty() && darsena.isFree()) {
@@ -264,7 +280,6 @@ public class Simulation {
     private void calculateAvgTrucksOutside() {
         avgTrucksOutside = ((double) 1 / day) * ((day - 1) * avgTrucksOutside + outsideQueue.size());
     }
-
 
     private LocalDateTime getNextEvent() {
 
@@ -309,7 +324,7 @@ public class Simulation {
         return avgMinutesPerTruck;
     }
 
-    public double getAvgTrucksOutside(){
+    public double getAvgTrucksOutside() {
         return avgTrucksOutside;
     }
 
@@ -329,8 +344,8 @@ public class Simulation {
         return clock;
     }
 
-    public Events getLastEvent() {
-        return lastEvent;
+    public Events getLastEventDescription() {
+        return lastEventDescription;
     }
 
     public Server getRecepcion() {
@@ -349,11 +364,11 @@ public class Simulation {
         return balanzaQueue;
     }
 
-    public Server getDarsena_1() {
+    public Server getDarsena1() {
         return darsena_1;
     }
 
-    public Server getDarsena_2() {
+    public Server getDarsena2() {
         return darsena_2;
     }
 
@@ -367,5 +382,9 @@ public class Simulation {
 
     public ClientGenerator getClientGenerator() {
         return clientGenerator;
+    }
+
+    public Optional<Client> getClientOfEvent() {
+        return Optional.ofNullable(clientOfEvent);
     }
 }
