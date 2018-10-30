@@ -38,7 +38,7 @@ public class Simulation {
     private Client clientOfEvent;
     private int day;
     private int limitOfSimulations;
-    private ArrayList<Day> days;
+    private List<Day> days;
 
 
     private Simulation(SimulationType type, int days) {
@@ -389,7 +389,7 @@ public class Simulation {
         return Optional.ofNullable(clientOfEvent);
     }
 
-    public ArrayList<Day> getDays() {
+    public List<Day> getDays() {
         return days;
     }
 }
