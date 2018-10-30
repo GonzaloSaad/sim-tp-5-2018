@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="panelSim1" prefHeight="540.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="utn.frc.sim.view.SimulationController">
-    <TableView fx:id="tvSim" layoutX="30.0" layoutY="62.0" prefHeight="412.0" prefWidth="927.0" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="243.0">
+<AnchorPane fx:id="panelSim1" prefHeight="543.0" prefWidth="1277.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="utn.frc.sim.view.SimulationController">
+    <TableView fx:id="tvSim" layoutX="30.0" layoutY="81.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="382.0" prefWidth="926.0" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="321.0">
         <columns>
-            <TableColumn fx:id="event" prefWidth="75.0" text="Evento" />
             <TableColumn fx:id="clock" prefWidth="75.0" text="Reloj" />
             <TableColumn fx:id="trucks" prefWidth="75.0" text="Camion" />
             <TableColumn fx:id="nextArrival" prefWidth="75.0" text="Proxima llegada" />
@@ -33,20 +34,28 @@
             <TableColumn fx:id="day" prefWidth="75.0" text="Dia" />
             <TableColumn fx:id="avg" prefWidth="75.0" text="Duracion promedio" />
             <TableColumn fx:id="truckXDayServed" prefWidth="75.0" text="Camiones servidos por dia" />
+            <TableColumn fx:id="event" prefWidth="75.0" text="Evento" />
         </columns>
+      <cursor>
+         <Cursor fx:constant="DEFAULT" />
+      </cursor>
     </TableView>
 
-    <Button fx:id="automatic" layoutX="479.0" layoutY="492.0" mnemonicParsing="false" onAction="#btnRunClick" text="Automatico" />
-    <Button fx:id="semiautomatic"  layoutX="591.0" layoutY="492.0" mnemonicParsing="false" onAction="#btnRunSemiClick" text="Semi Automatico" />
-    <Button layoutX="740.0" layoutY="492.0" mnemonicParsing="false" onAction="#btnReset" prefHeight="26.0" prefWidth="100.0" text="Reset table" />
-   <Label alignment="CENTER" contentDisplay="CENTER" layoutX="354.0" layoutY="23.0" prefHeight="16.0" prefWidth="168.0" text="Simulación" underline="true">
+    <Button fx:id="automatic" layoutX="319.0" layoutY="488.0" mnemonicParsing="false" onAction="#btnRunClick" text="Automatico" />
+    <Button fx:id="semiautomatic" layoutX="431.0" layoutY="488.0" mnemonicParsing="false" onAction="#btnRunSemiClick" text="Semi Automatico" />
+    <Button layoutX="580.0" layoutY="488.0" mnemonicParsing="false" onAction="#btnReset" prefHeight="26.0" prefWidth="100.0" text="Reset table" />
+   <Label alignment="CENTER" contentDisplay="CENTER" layoutX="379.0" layoutY="5.0" prefHeight="16.0" prefWidth="168.0" text="Simulación" underline="true">
       <font>
          <Font name="System Bold" size="24.0" />
       </font>
    </Label>
-   <Label alignment="CENTER" contentDisplay="CENTER" layoutX="990.0" layoutY="23.0" prefHeight="16.0" prefWidth="168.0" text="Resultados" underline="true">
+   <Label alignment="CENTER" contentDisplay="CENTER" layoutX="1032.0" layoutY="54.0" prefHeight="16.0" prefWidth="168.0" text="Resultados" underline="true">
       <font>
          <Font name="System Bold" size="24.0" />
       </font>
    </Label>
+   <Label layoutX="30.0" layoutY="50.0" text="Desde" />
+   <Label layoutX="150.0" layoutY="50.0" text="Hasta" />
+   <TextField fx:id="dayFrom" layoutX="66.0" layoutY="46.0" prefHeight="25.0" prefWidth="57.0" />
+   <TextField fx:id="dayTo" layoutX="196.0" layoutY="46.0" prefHeight="25.0" prefWidth="57.0" />
 </AnchorPane>
