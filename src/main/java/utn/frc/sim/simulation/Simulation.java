@@ -155,7 +155,6 @@ public class Simulation {
         if (clientGenerator.isEventFrom(clock)) {
             lastEventDescription = Events.LLEGADA_CLIENTE;
             Client nextClient = clientGenerator.getNextClient();
-            logger.info("{} - New client into the system. Client: {}.", clock, nextClient);
             clientOfEvent = nextClient;
 
             if (clock.getHour() >= 18) {
