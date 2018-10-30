@@ -35,7 +35,7 @@ public class SimulationWrapper {
         return simulation.getClock().toString();
     }
 
-    public String getNumberClient(){
+    public String getNumberClient() {
         return simulation.getClientOfEvent()
                 .map(client -> Integer.toString(client.getClientNumber()))
                 .orElse(NONE_SYMBOL);
@@ -51,9 +51,9 @@ public class SimulationWrapper {
         }
         return nextEvent.toString();
     }
-   // public  String getNumberCliente(){
+    // public  String getNumberCliente(){
     //    return Integer.toString(simulation.;
-   // }
+    // }
 
 
     /*
@@ -152,7 +152,7 @@ public class SimulationWrapper {
     Cola de afuera.
      */
 
-    public String getOutsideQueueLenght(){
+    public String getOutsideQueueLenght() {
         return Integer.toString(simulation.getOutsideQueue().size());
     }
 
@@ -165,14 +165,14 @@ public class SimulationWrapper {
     }
 
     public String getDay() {
-        return Integer.toString(simulation.getDay());
+        return Integer.toString(simulation.getClock().getDayOfMonth());
     }
 
     public String getAverageDurationOfService() {
         return DoubleUtils.getDoubleWithFourPlaces(simulation.getAvgMinutesPerTruck());
     }
 
-    public String getAverageTrucksOutside(){
+    public String getAverageTrucksOutside() {
         return DoubleUtils.getDoubleWithFourPlaces(simulation.getAvgTrucksOutside());
     }
 
