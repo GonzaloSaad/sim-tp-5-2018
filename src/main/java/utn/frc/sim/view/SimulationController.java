@@ -4,6 +4,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -13,7 +14,6 @@ import org.apache.logging.log4j.Logger;
 import utn.frc.sim.simulation.SimulationFinishedException;
 import utn.frc.sim.simulation.SimulationWrapper;
 import utn.frc.sim.util.Fila;
-import utn.frc.sim.util.Fila2;
 
 public class SimulationController {
 
@@ -67,42 +67,68 @@ public class SimulationController {
     @FXML
     private TableColumn<Fila, String> truckXDayServed;
 
-
     @FXML
     private TableView<Fila> tvSim;
 
     @FXML
-    private TableView tvSim2;
+    private AnchorPane panelSim1;
 
     @FXML
-    private AnchorPane panelSim1;
+    private Button semiautomatic;
 
     private SimulationWrapper simulation;
     private ObservableList<Fila> data;
-    private ObservableList<Fila2> data2;
 
     @FXML
     void btnRunClick(ActionEvent event) {
-        runSimulation();
+        semiautomatic.setDisable(true);
+        runSimulation(true);
     }
 
+    @FXML
+    void btnRunSemiClick(ActionEvent event) {
+        runSimulation(false);
+    }
 
-    private void runSimulation() {
+    @FXML
+    void btnReset(ActionEvent event){
+        semiautomatic.setDisable(false);
+        tvSim.getItems().clear();
+        loadSimulation();
+    }
+
+    private void loadSimulation(){
         simulation = SimulationWrapper.ofType(MainMenuController.getType(), MAX_SIMULATION);
         data = FXCollections.observableArrayList();
-        data2 = FXCollections.observableArrayList();
+    }
+
+    private void runSimulation(boolean auto) {
 
         logger.info("Initializing simulation of {} days.", MAX_SIMULATION);
-        while (true) {
+
+        if (auto) {
+            loadSimulation();
+            while (true) {
+                try {
+                    simulation.step();
+                } catch (SimulationFinishedException e) {
+                    logger.info("Simulation finished.");
+                    break;
+                }
+                loadTable();
+            }
+        } else {
             try {
                 simulation.step();
             } catch (SimulationFinishedException e) {
                 logger.info("Simulation finished.");
-                break;
+                return;
             }
             loadTable();
         }
     }
+
+
 
     private void loadTable() {
 
@@ -133,9 +159,7 @@ public class SimulationController {
         data.addAll(new Fila(event1, clock1, trucks1, nextArrival1, stateReception1,
                 truckRec1, endRec1, queueRec1, stateBal1, truckBal1, endBal1,
                 queueBal1, stateDar11, truckDar11, endDar11, stateDar21,
-                truckDar21, endDar21, queueDar1));
-
-        data2.addAll(new Fila2(truckServed1, day1, avg1, truckXDayServed1));
+                truckDar21, endDar21, queueDar1, truckServed1, day1, avg1, truckXDayServed1));
 
         event.setCellValueFactory(new PropertyValueFactory<Fila, String>("event"));
         clock.setCellValueFactory(new PropertyValueFactory<Fila, String>("clock"));
@@ -162,6 +186,5 @@ public class SimulationController {
         truckXDayServed.setCellValueFactory(new PropertyValueFactory<Fila, String>("truckXDayServed"));
 
         tvSim.setItems(data);
-        tvSim2.setItems(data2);
     }
 }
