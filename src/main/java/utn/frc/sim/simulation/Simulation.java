@@ -13,6 +13,7 @@ import utn.frc.sim.model.servers.Server;
 import utn.frc.sim.model.servers.ServerWithInterruptions;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -20,6 +21,7 @@ public class Simulation {
 
     private static final Logger logger = LogManager.getLogger(Simulation.class);
     private LocalDateTime clock;
+    private LocalDateTime dayFirstEvent;
     private Server recepcion;
     private Queue<Client> recepcionQueue;
     private Server balanza;
@@ -30,25 +32,28 @@ public class Simulation {
     private Queue<Client> outsideQueue;
     private ClientGenerator clientGenerator;
     private double avgMinutesPerTruck;
+    private double avgTrucksOutside;
     private int trucksServed;
     private Events lastEvent;
+    private int day;
 
 
     private Simulation(SimulationType type) {
         initSimulation(type);
     }
 
-    public static Simulation ofType(SimulationType type){
+    public static Simulation ofType(SimulationType type) {
         return new Simulation(type);
     }
 
     private void initSimulation(SimulationType type) {
-        initClock(type);
+        initFirstEventOfDay();
         initStatisticsValues();
         initRecepcion();
         initBalanza();
         initDarsenas();
         initClientGenerator(type);
+        initOutsideQueue();
         initEvent();
     }
 
@@ -56,31 +61,27 @@ public class Simulation {
         lastEvent = Events.INICIO;
     }
 
-    private void initClock(SimulationType type) {
-        int hourOfStart;
-        if(type == SimulationType.Type1){
-            hourOfStart = 12;
-        } else{
-            hourOfStart = 5;
-        }
-        clock = LocalDateTime.of(2018, 1, 1, hourOfStart, 0);
+    private void initFirstEventOfDay() {
+        day = 1;
+        dayFirstEvent = LocalDateTime.of(2018, 1, 1, 5, 0);
     }
 
     private void initStatisticsValues() {
         avgMinutesPerTruck = 0;
+        avgTrucksOutside = 0;
         trucksServed = 0;
     }
 
     private void initRecepcion() {
         recepcionQueue = new LinkedList<>();
         DistributionRandomGenerator generator = UniformDistributionGenerator.createOf(3, 7);
-        recepcion = new Server("RECEPCION", generator);
+        recepcion = new Server("Recepcion", generator);
     }
 
     private void initBalanza() {
         balanzaQueue = new LinkedList<>();
         DistributionRandomGenerator generator = UniformDistributionGenerator.createOf(5, 7);
-        balanza = new Server("BALANZA", generator);
+        balanza = new Server("Balanza", generator);
     }
 
     private void initDarsenas() {
@@ -92,40 +93,73 @@ public class Simulation {
     private Server createDarsenaForNumber(int number) {
         DistributionRandomGenerator generator = UniformDistributionGenerator.createOf(15, 20);
         NormalDistributionGenerator generatorForInterruptions = NormalDistributionGenerator.createOf(10, Math.sqrt(1.2));
-        return new ServerWithInterruptions("DARSENA_" + number, generator, 15, generatorForInterruptions);
+        return new ServerWithInterruptions("Darsena " + number, generator, 15, generatorForInterruptions);
     }
 
     private void initClientGenerator(SimulationType type) {
         DistributionRandomGenerator generator;
-        if(type == SimulationType.Type1){
+        int hourOfStart;
+        if (type == SimulationType.Type1) {
             generator = NegativeExponentialDistributionGenerator.createOf(1 / 7.5);
+            hourOfStart = 12;
         } else {
             generator = UniformDistributionGenerator.createOf(7, 8);
+            hourOfStart = 5;
         }
-        clientGenerator = new ClientGenerator(clock, generator);
+        LocalDateTime clientsInitial = LocalDateTime.of(2018, 1, 1, hourOfStart, 0);
+        clientGenerator = new ClientGenerator(clientsInitial, generator);
+    }
+
+    private void initOutsideQueue() {
+        outsideQueue = new LinkedList<>();
     }
 
     public void step() {
-        LocalDateTime clock = getNextEvent();
-        handleEventForClock(clock);
+        clock = getNextEvent();
+        handleEventFromFirstEvent(clock);
     }
 
-    private void handleEventForClock(LocalDateTime clock) {
-        handleEventFromClients(clock);
+    private void handleEventFromFirstEvent(LocalDateTime clock) {
+        if (dayFirstEvent.isEqual(clock)) {
+            logger.info("{} - Day start.", clock);
+            lastEvent = Events.INICIO_DEL_DIA;
+            dayFirstEvent = dayFirstEvent.plus(1, ChronoUnit.DAYS);
+            calculateAvgTrucksOutside();
+            day++;
+
+            while (!outsideQueue.isEmpty()) {
+                Client clientOfOutsideQueue = outsideQueue.poll();
+                logger.info("{} - Ingesting outside clients. Client: {}.", clock, clientOfOutsideQueue);
+                if (recepcion.isFree()) {
+                    clientOfOutsideQueue.setInTime(clock);
+                    recepcion.serveToClient(clock, clientOfOutsideQueue);
+                } else {
+                    recepcionQueue.add(clientOfOutsideQueue);
+                }
+            }
+        } else {
+            handleEventFromClients(clock);
+        }
     }
 
     private void handleEventFromClients(LocalDateTime clock) {
         if (clientGenerator.isEventFrom(clock)) {
             lastEvent = Events.LLEGADA_CLIENTE;
             Client nextClient = clientGenerator.getNextClient();
-            logger.info("{} - New client into the system. Client: {}.", clock, nextClient);
-            //outsideQueue.add(nextClient);
-            if (recepcion.isFree()) {
-                nextClient.setInTime(clock);
-                recepcion.serveToClient(clock, nextClient);
+
+            if (clock.getHour() >= 18) {
+                logger.info("{} - New client. Hour > 18. Going to wait ouside. Client: {}.", clock, nextClient);
+                outsideQueue.add(nextClient);
             } else {
-                recepcionQueue.add(nextClient);
+                logger.info("{} - New client into the system. Client: {}.", clock, nextClient);
+                if (recepcion.isFree()) {
+                    nextClient.setInTime(clock);
+                    recepcion.serveToClient(clock, nextClient);
+                } else {
+                    recepcionQueue.add(nextClient);
+                }
             }
+
 
         } else {
             handleEventFromRecepcion(clock);
@@ -197,9 +231,9 @@ public class Simulation {
         if (event.hasClient()) {
             Client finishedClient = event.getClient();
             finishedClient.setOutTime(clock);
-            calculateAvgMinutesForTrucks(finishedClient);
             trucksServed++;
-            logger.info("{} - Darsena finished. Client out: {}.", clock, finishedClient);
+            calculateAvgMinutesForTrucks(finishedClient);
+            logger.info("{} - Darsena {} finished. Client out: {}.", clock, darsenaNumber, finishedClient);
 
             if (darsenaNumber == 1) {
                 lastEvent = Events.FIN_DARSENA_1;
@@ -208,7 +242,7 @@ public class Simulation {
             }
 
         } else {
-            logger.info("{} - Darsena finished. No client.", clock);
+            logger.info("{} - Darsena {} finished. No client. Just calibration.", clock, darsenaNumber);
             if (darsenaNumber == 1) {
                 lastEvent = Events.FIN_DARSENA_1_CALIBRACION;
             } else {
@@ -222,60 +256,69 @@ public class Simulation {
     }
 
     private void calculateAvgMinutesForTrucks(Client client) {
-        int n = client.getClientNumber();
+        int n = trucksServed;
         long duration = client.getMinutesOfAttention();
         avgMinutesPerTruck = ((double) 1 / n) * ((n - 1) * avgMinutesPerTruck + duration);
     }
 
+    private void calculateAvgTrucksOutside() {
+        avgTrucksOutside = ((double) 1 / day) * ((day - 1) * avgTrucksOutside + outsideQueue.size());
+    }
+
+
     private LocalDateTime getNextEvent() {
 
-        LocalDateTime firstTime = clientGenerator.getNextClientEvent();
+        LocalDateTime firstEvent = dayFirstEvent;
 
-        if (clock.getDayOfYear() < firstTime.getDayOfYear()) {
-
+        if (clientGenerator.getNextClientEvent().isBefore(firstEvent)) {
+            firstEvent = clientGenerator.getNextClientEvent();
         }
 
         if (recepcion.getNextEnd().isPresent()) {
             LocalDateTime recepcionTime = recepcion.getNextEnd().get();
-            if (recepcionTime.isBefore(firstTime)) {
-                firstTime = recepcionTime;
+            if (recepcionTime.isBefore(firstEvent)) {
+                firstEvent = recepcionTime;
             }
         }
 
         if (balanza.getNextEnd().isPresent()) {
             LocalDateTime balanzaTime = balanza.getNextEnd().get();
-            if (balanzaTime.isBefore(firstTime)) {
-                firstTime = balanzaTime;
+            if (balanzaTime.isBefore(firstEvent)) {
+                firstEvent = balanzaTime;
             }
         }
 
         if (darsena_1.getNextEnd().isPresent()) {
             LocalDateTime darsena_1_time = darsena_1.getNextEnd().get();
-            if (darsena_1_time.isBefore(firstTime)) {
-                firstTime = darsena_1_time;
+            if (darsena_1_time.isBefore(firstEvent)) {
+                firstEvent = darsena_1_time;
             }
         }
 
         if (darsena_2.getNextEnd().isPresent()) {
             LocalDateTime darsena_2_Time = darsena_2.getNextEnd().get();
-            if (darsena_2_Time.isBefore(firstTime)) {
-                firstTime = darsena_2_Time;
+            if (darsena_2_Time.isBefore(firstEvent)) {
+                firstEvent = darsena_2_Time;
             }
         }
 
-        return firstTime;
+        return firstEvent;
     }
 
     public double getAvgMinutesPerTruck() {
         return avgMinutesPerTruck;
     }
 
+    public double getAvgTrucksOutside(){
+        return avgTrucksOutside;
+    }
+
     public double getTrucksServedPerDay() {
         return (double) trucksServed / clientGenerator.getDays();
     }
 
-    public int getDays() {
-        return clientGenerator.getDays();
+    public int getDay() {
+        return day;
     }
 
     public int getTrucksServed() {

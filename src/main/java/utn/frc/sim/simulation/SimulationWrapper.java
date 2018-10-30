@@ -138,6 +138,15 @@ public class SimulationWrapper {
         return Integer.toString(simulation.getDarsenaQueue().size());
     }
 
+
+    /*
+    Cola de afuera.
+     */
+
+    public String getOutsideQueueLenght(){
+        return Integer.toString(simulation.getOutsideQueue().size());
+    }
+
     /*
     Estatisticas y conteos.
      */
@@ -147,14 +156,18 @@ public class SimulationWrapper {
     }
 
     public String getDay() {
-        return Integer.toString(simulation.getDays());
+        return Integer.toString(simulation.getDay());
     }
 
     public String getAverageDurationOfService() {
         return DoubleUtils.getDoubleWithFourPlaces(simulation.getAvgMinutesPerTruck());
     }
 
-    public String getTrucksServedPerDay() {
+    public String getAverageTrucksOutside(){
+        return DoubleUtils.getDoubleWithFourPlaces(simulation.getAvgTrucksOutside());
+    }
+
+    public String getAverageTrucksServedPerDay() {
         return DoubleUtils.getDoubleWithFourPlaces(simulation.getTrucksServedPerDay());
     }
 
