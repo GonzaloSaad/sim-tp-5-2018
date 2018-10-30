@@ -5,7 +5,7 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane fx:id="panelSim1" prefHeight="540.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="utn.frc.sim.view.Controller">
+<AnchorPane fx:id="panelSim1" prefHeight="540.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="utn.frc.sim.view.SimulationController">
   <TableView fx:id="tvSim" layoutX="40.0" layoutY="32.0" prefHeight="412.0" prefWidth="944.0" AnchorPane.leftAnchor="40.0" AnchorPane.rightAnchor="40.0">
     <columns>
       <TableColumn fx:id="event" prefWidth="75.0" text="Evento" />

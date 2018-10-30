@@ -14,61 +14,57 @@ import java.io.IOException;
 public class MainMenuController {
 
 
-        public static SimulationType type;
+    private static SimulationType type;
 
-        @FXML
-        private Pane paneMain;
+    @FXML
+    private Pane paneMain;
 
-        private static Logger logger = LogManager.getLogger(MainMenuController.class);
+    private static Logger logger = LogManager.getLogger(MainMenuController.class);
 
+    @FXML
+    void openSimulation1(ActionEvent event) {
+        setSimulationDialog();
 
-        @FXML
-        void openSimulation1(ActionEvent event) {
-            setSimulationDialog();
+        type = SimulationType.Type1;
+    }
 
-            type = SimulationType.Type1;
+    @FXML
+    void openSimulation12(ActionEvent event) {
+        setSimulation2Dialog();
+        type = SimulationType.Type2;
+    }
+
+    @FXML
+    void openEssayInfoDialog(ActionEvent event) {
+        setEssayInfoDialog();
+    }
+
+    private void setSimulationDialog() {
+        try {
+            paneMain.getChildren().setAll((AnchorPane) FXMLLoader.load(getClass().getResource("/views/sim1.fxml")));
+        } catch (IOException e) {
+            logger.error("Problem opening SimulacionDialog.", e);
         }
+    }
 
-
-        @FXML
-        void openSimulation12(ActionEvent event) {
-            setSimulation2Dialog();
-            type = SimulationType.Type2;
+    private void setSimulation2Dialog() {
+        try {
+            paneMain.getChildren().setAll((AnchorPane) FXMLLoader.load(getClass().getResource("/views/sim1.fxml")));
+        } catch (IOException e) {
+            logger.error("Problem opening AutomaticDialog.", e);
         }
+    }
 
-        @FXML
-        void openEssayInfoDialog(ActionEvent event) {
-            setEssayInfoDialog();
+    private void setEssayInfoDialog() {
+        try {
+            paneMain.getChildren().setAll((AnchorPane) FXMLLoader.load(getClass().getResource("/views/menu/essay_info.fxml")));
+        } catch (IOException e) {
+            logger.error("Problem opening EssayInfoDialog.", e);
         }
+    }
 
-
-        private void setSimulationDialog() {
-            try {
-                paneMain.getChildren().setAll((AnchorPane) FXMLLoader.load(getClass().getResource("/views/sim1.fxml")));
-            } catch (IOException e) {
-                logger.error("Problem opening SimulacionDialog.", e);
-            }
-        }
-
-        private void setSimulation2Dialog() {
-            try {
-                paneMain.getChildren().setAll((AnchorPane) FXMLLoader.load(getClass().getResource("/views/sim1.fxml")));
-            } catch (IOException e) {
-                logger.error("Problem opening AutomaticDialog.", e);
-            }
-        }
-
-        private void setEssayInfoDialog() {
-            try {
-                paneMain.getChildren().setAll((AnchorPane) FXMLLoader.load(getClass().getResource("/views/menu/essay_info.fxml")));
-            } catch (IOException e) {
-                logger.error("Problem opening EssayInfoDialog.", e);
-            }
-         }
-
-
-        public static SimulationType getType(){
-            return type;
+    public static SimulationType getType() {
+        return type;
     }
 
 
