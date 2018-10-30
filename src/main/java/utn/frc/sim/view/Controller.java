@@ -14,9 +14,9 @@ import utn.frc.sim.simulation.SimulationFinishedException;
 import utn.frc.sim.simulation.SimulationWrapper;
 import utn.frc.sim.util.Fila;
 
-public class SimulationController {
+public class Controller {
 
-    private static final Logger logger = LogManager.getLogger(SimulationController.class);
+    private static final Logger logger = LogManager.getLogger(Controller.class);
     private static final int MAX_SIMULATION = 30;
 
     @FXML
