@@ -154,14 +154,16 @@ public class Simulation {
 
     private void handleEventFromClients(LocalDateTime clock) {
         if (clientGenerator.isEventFrom(clock)) {
-            lastEventDescription = Events.LLEGADA_CLIENTE;
+
             Client nextClient = clientGenerator.getNextClient();
             clientOfEvent = nextClient;
 
             if (clock.getHour() >= 18) {
+                lastEventDescription = Events.LLEGADA_CLIENTE_AFUERA;
                 logger.debug("{} - New client. Hour > 18. Going to wait ouside. Client: {}.", clock, nextClient);
                 outsideQueue.add(nextClient);
             } else {
+                lastEventDescription = Events.LLEGADA_CLIENTE;
                 logger.debug("{} - New client into the system. Client: {}.", clock, nextClient);
                 if (recepcion.isFree()) {
                     nextClient.setInTime(clock);
