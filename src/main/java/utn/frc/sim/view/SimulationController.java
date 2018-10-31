@@ -97,6 +97,7 @@ public class SimulationController {
     private void runSimulationToEnd() {
         disableSemiautomaticButton();
         runSimulation(Boolean.TRUE);
+        
     }
 
     private void runOneStepOfSimulation() {
@@ -109,7 +110,7 @@ public class SimulationController {
     }
 
     private void resetSimulation() {
-        logger.info("Force ending the current simulation. Restart was requested.");
+        logger.debug("Force ending the current simulation. Restart was requested.");
         enableSemiautomaticButton();
         clearItemsInTableView();
         initializeNewSimulation();
@@ -128,7 +129,7 @@ public class SimulationController {
     }
 
     private void initializeNewSimulation() {
-        logger.info("Initializing simulation of {} days.", MAX_SIMULATION);
+        logger.debug("Initializing simulation of {} days.", MAX_SIMULATION);
         simulation = SimulationWrapper.ofType(MainMenuController.getType(), MAX_SIMULATION);
         data = FXCollections.observableArrayList();
     }
@@ -140,7 +141,8 @@ public class SimulationController {
                 try {
                     runOneStepAndAddToTable();
                 } catch (SimulationFinishedException e) {
-                    logger.info("Simulation finished.");
+                    calculateStats();
+                    logger.debug("Simulation finished.");
                     break;
                 }
             }
@@ -148,11 +150,15 @@ public class SimulationController {
             try {
                 runOneStepAndAddToTable();
             } catch (SimulationFinishedException e) {
-                logger.info("Simulation finished.");
+                calculateStats();
+                logger.debug("Simulation finished.");
             }
         }
     }
 
+    private void calculateStats(){
+
+    }
     private void runOneStepAndAddToTable() throws SimulationFinishedException {
         simulation.step();
         loadTable();
@@ -179,16 +185,12 @@ public class SimulationController {
         String truckDar2Content = simulation.getDarsena2Client();
         String endDar2Content = simulation.getgetDarsena2NextEvent();
         String queueDarContent = simulation.getDarsenaQueueLenght();
-        String truckServedContent = simulation.getNumberOfTrucksServed();
         String dayContent = simulation.getDay();
-        String avgContent = simulation.getAverageDurationOfService();
-        String truckXDayServedContent = simulation.getTrucksServedPerDay();
 
         data.addAll(new Fila(eventContent, clockContent, trucksContent, nextArrivalContent, stateReceptionContent,
                 truckRecContent, endRecContent, queueRecContent, stateBalContent, truckBalContent, endBalContent,
                 queueBalContent, stateDar1Content, truckDar1Content, endDar1Content, stateDar2Content,
-                truckDar2Content, endDar2Content, queueDarContent, truckServedContent, dayContent, avgContent,
-                truckXDayServedContent));
+                truckDar2Content, endDar2Content, queueDarContent, dayContent));
 
         event.setCellValueFactory(new PropertyValueFactory<>("event"));
         clock.setCellValueFactory(new PropertyValueFactory<>("clock"));
