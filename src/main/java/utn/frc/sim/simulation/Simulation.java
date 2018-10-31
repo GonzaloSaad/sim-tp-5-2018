@@ -66,7 +66,7 @@ public class Simulation {
     }
 
     private void initFirstEventOfDay() {
-        day = 1;
+        day = 0;
         dayFirstEvent = LocalDateTime.of(2018, 1, 1, 5, 0);
     }
 
@@ -126,6 +126,7 @@ public class Simulation {
     private void handleEventFromFirstEvent(LocalDateTime clock) throws SimulationFinishedException {
         if (dayFirstEvent.isEqual(clock)) {
 
+            day++;
             if(day > limitOfSimulations){
                 throw new SimulationFinishedException();
             }
@@ -134,7 +135,7 @@ public class Simulation {
             dayFirstEvent = dayFirstEvent.plus(1, ChronoUnit.DAYS);
             clientOfEvent = null;
             calculateAvgTrucksOutside();
-            day++;
+
 
             while (!outsideQueue.isEmpty()) {
                 Client clientOfOutsideQueue = outsideQueue.poll();
