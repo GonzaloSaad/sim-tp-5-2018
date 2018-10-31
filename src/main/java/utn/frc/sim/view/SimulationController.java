@@ -211,10 +211,7 @@ public class SimulationController {
         truckDar2.setCellValueFactory(new PropertyValueFactory<>("truckDar2"));
         endDar2.setCellValueFactory(new PropertyValueFactory<>("endDar2"));
         queueDar.setCellValueFactory(new PropertyValueFactory<>("queueDar"));
-        truckServed.setCellValueFactory(new PropertyValueFactory<>("truckServed"));
         day.setCellValueFactory(new PropertyValueFactory<>("day"));
-        avg.setCellValueFactory(new PropertyValueFactory<>("asd"));
-        truckXDayServed.setCellValueFactory(new PropertyValueFactory<>("truckXDayServed"));
 
         tvSim.setItems(data);
     }
