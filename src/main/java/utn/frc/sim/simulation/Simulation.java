@@ -129,7 +129,7 @@ public class Simulation {
             if(day > limitOfSimulations){
                 throw new SimulationFinishedException();
             }
-            logger.info("{} - Day start.", clock);
+            logger.debug("{} - Day start.", clock);
             lastEventDescription = Events.INICIO_DEL_DIA;
             dayFirstEvent = dayFirstEvent.plus(1, ChronoUnit.DAYS);
             clientOfEvent = null;
@@ -138,7 +138,7 @@ public class Simulation {
 
             while (!outsideQueue.isEmpty()) {
                 Client clientOfOutsideQueue = outsideQueue.poll();
-                logger.info("{} - Ingesting outside clients. Client: {}.", clock, clientOfOutsideQueue);
+                logger.debug("{} - Ingesting outside clients. Client: {}.", clock, clientOfOutsideQueue);
                 if (recepcion.isFree()) {
                     clientOfOutsideQueue.setInTime(clock);
                     recepcion.serveToClient(clock, clientOfOutsideQueue);
@@ -158,10 +158,10 @@ public class Simulation {
             clientOfEvent = nextClient;
 
             if (clock.getHour() >= 18) {
-                logger.info("{} - New client. Hour > 18. Going to wait ouside. Client: {}.", clock, nextClient);
+                logger.debug("{} - New client. Hour > 18. Going to wait ouside. Client: {}.", clock, nextClient);
                 outsideQueue.add(nextClient);
             } else {
-                logger.info("{} - New client into the system. Client: {}.", clock, nextClient);
+                logger.debug("{} - New client into the system. Client: {}.", clock, nextClient);
                 if (recepcion.isFree()) {
                     nextClient.setInTime(clock);
                     recepcion.serveToClient(clock, nextClient);
@@ -182,7 +182,7 @@ public class Simulation {
             Event event = recepcion.getEvent();
             if (event.hasClient()) {
                 Client finishedClient = event.getClient();
-                logger.info("{} - Reception finished. Client: {}.", clock, finishedClient);
+                logger.debug("{} - Reception finished. Client: {}.", clock, finishedClient);
                 clientOfEvent = finishedClient;
                 if (balanza.isFree()) {
                     balanza.serveToClient(clock, finishedClient);
@@ -209,7 +209,7 @@ public class Simulation {
             Event event = balanza.getEvent();
             if (event.hasClient()) {
                 Client finishedClient = event.getClient();
-                logger.info("{} - Balanza finished. Client: {}.", clock, finishedClient);
+                logger.debug("{} - Balanza finished. Client: {}.", clock, finishedClient);
                 clientOfEvent = finishedClient;
                 if (darsena_1.isFree()) {
                     darsena_1.serveToClient(clock, finishedClient);
@@ -247,7 +247,7 @@ public class Simulation {
             trucksServed++;
             calculateAvgMinutesForTrucks(finishedClient);
             clientOfEvent = finishedClient;
-            logger.info("{} - Darsena {} finished. Client out: {}.", clock, darsenaNumber, finishedClient);
+            logger.debug("{} - Darsena {} finished. Client out: {}.", clock, darsenaNumber, finishedClient);
 
             if (darsenaNumber == 1) {
                 lastEventDescription = Events.FIN_DARSENA_1;
@@ -257,7 +257,7 @@ public class Simulation {
 
         } else {
             clientOfEvent = null;
-            logger.info("{} - Darsena {} finished. No client. Just calibration.", clock, darsenaNumber);
+            logger.debug("{} - Darsena {} finished. No client. Just calibration.", clock, darsenaNumber);
             if (darsenaNumber == 1) {
                 lastEventDescription = Events.FIN_DARSENA_1_CALIBRACION;
             } else {
