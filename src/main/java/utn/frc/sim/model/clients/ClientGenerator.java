@@ -20,7 +20,7 @@ public class ClientGenerator {
         this.initTime = initTime;
     }
 
-    public Client getNextClient(){
+    public Client getNextClient() {
         calculateNextEvent();
         lastClient++;
         return new Client(lastClient);
@@ -28,10 +28,10 @@ public class ClientGenerator {
 
     private void calculateNextEvent() {
         LocalDateTime nextEvent = nextClientEvent.plus((int) generator.random(), ChronoUnit.MINUTES);
-        if (nextEvent.getHour() >= 20){
+        if (nextEvent.getHour() >= 20) {
             nextClientEvent = initTime.plus(day, ChronoUnit.DAYS);
             day++;
-        } else{
+        } else {
             nextClientEvent = nextEvent;
         }
     }
@@ -39,14 +39,8 @@ public class ClientGenerator {
     public LocalDateTime getNextClientEvent() {
         return nextClientEvent;
     }
-    public int getLastClient(){
-        return lastClient;
-}
-    public boolean isEventFrom(LocalDateTime clock){
-        return nextClientEvent.equals(clock);
-    }
 
-    public int getDays(){
-        return day;
+    public boolean isEventFrom(LocalDateTime clock) {
+        return nextClientEvent.equals(clock);
     }
 }
