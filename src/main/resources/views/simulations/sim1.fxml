@@ -4,12 +4,13 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane fx:id="panelSim1" prefHeight="573.0" prefWidth="896.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="utn.frc.sim.view.SimulationController">
-    <TableView fx:id="tvSim" layoutX="24.0" layoutY="62.0" prefHeight="412.0" prefWidth="815.0" AnchorPane.leftAnchor="35.0" AnchorPane.rightAnchor="35.0">
+<AnchorPane fx:id="panelSim1" prefHeight="573.0" prefWidth="1100.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="utn.frc.sim.view.SimulationController">
+    <TableView fx:id="tvSim" layoutX="24.0" layoutY="62.0" prefHeight="412.0" prefWidth="815.0" AnchorPane.leftAnchor="250.0" AnchorPane.rightAnchor="35.0">
         <columns>
             <TableColumn fx:id="event" prefWidth="75.0" text="Evento" />
             <TableColumn fx:id="clock" prefWidth="75.0" text="Reloj" />
@@ -59,4 +60,12 @@
       </font>
    </Label>
    <Text fx:id="txAvgDurationService1" layoutX="610.0" layoutY="546.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="77.99999952316284" />
+   <TextField fx:id="txtFromDay" layoutX="147.0" layoutY="94.0" prefHeight="25.0" prefWidth="71.0" />
+   <TextField fx:id="txtToDay" layoutX="147.0" layoutY="129.0" prefHeight="25.0" prefWidth="71.0" />
+   <TextField fx:id="txtToHour" layoutX="147.0" layoutY="204.0" prefHeight="25.0" prefWidth="71.0" />
+   <TextField fx:id="txtFromHour" layoutX="147.0" layoutY="166.0" prefHeight="25.0" prefWidth="71.0" />
+   <Label layoutX="45.0" layoutY="170.0" text="Hora desde:" />
+   <Label layoutX="47.0" layoutY="208.0" text="Hora hasta:" />
+   <Label layoutX="53.0" layoutY="98.0" text="Dia desde:" />
+   <Label layoutX="57.0" layoutY="133.0" text="Dia hasta:" />
 </AnchorPane>
