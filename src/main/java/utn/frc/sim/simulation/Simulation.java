@@ -38,6 +38,7 @@ public class Simulation {
     private Client clientOfEvent;
     private int day;
     private int limitOfSimulations;
+    private DistributionRandomGenerator capacityGenerator;
 
 
     private Simulation(SimulationType type, int days) {
@@ -82,6 +83,7 @@ public class Simulation {
 
     private void initBalanza() {
         balanzaQueue = new LinkedList<>();
+        capacityGenerator = UniformDistributionGenerator.createOf(15000,22000);
         DistributionRandomGenerator generator = UniformDistributionGenerator.createOf(5, 7);
         balanza = new Server("Balanza", generator);
     }
@@ -192,6 +194,7 @@ public class Simulation {
             Event event = balanza.getEvent();
             if (event.hasClient()) {
                 Client finishedClient = event.getClient();
+                finishedClient.setCapacity(capacityGenerator.random());
                 logger.debug("{} - Balanza finished. Client: {}.", clock, finishedClient);
                 clientOfEvent = finishedClient;
                 if (darsena_1.isFree()) {

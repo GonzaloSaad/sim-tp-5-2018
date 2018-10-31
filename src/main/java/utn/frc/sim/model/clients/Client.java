@@ -7,6 +7,7 @@ public class Client {
     private int clientNumber;
     private LocalDateTime inTime;
     private LocalDateTime outTime;
+    private double capacity;
 
 
     public Client(int clientNumber) {
@@ -38,6 +39,14 @@ public class Client {
             throw new IllegalStateException();
         }
         return ChronoUnit.MINUTES.between(inTime, outTime);
+    }
+
+    public double getCapacity() {
+        return capacity;
+    }
+
+    public void setCapacity(double capacity) {
+        this.capacity = capacity;
     }
 
     @Override
