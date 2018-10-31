@@ -23,8 +23,9 @@ public class ServerWithInterruptions extends Server {
 
     @Override
     public Event getEvent() {
-
+        Event event;
         if (state == ServerState.OCP) {
+            event = new Event(servingClient);
             clientsWithoutInterruptions++;
             if (clientsWithoutInterruptions == interruptPeriod) {
                 logger.info("{}: {} clients without interruptions. Next event is calibration.",
@@ -37,12 +38,15 @@ public class ServerWithInterruptions extends Server {
                 nextEnd = null;
                 state = ServerState.LBR;
             }
-            return new Event(servingClient);
+
         } else {
             clientsWithoutInterruptions = 0;
             nextEnd = null;
+            servingClient = null;
             state = ServerState.LBR;
-            return new Event();
+            event = new Event();
         }
+        servingClient = null;
+        return event;
     }
 }
