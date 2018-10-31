@@ -28,7 +28,7 @@ public class ClientGenerator {
 
     private void calculateNextEvent() {
         LocalDateTime nextEvent = nextClientEvent.plus((int) generator.random(), ChronoUnit.MINUTES);
-        if (nextEvent.getHour() >= 20) {
+        if (nextEvent.getHour() >= 18) {
             nextClientEvent = initTime.plus(day, ChronoUnit.DAYS);
             day++;
         } else {

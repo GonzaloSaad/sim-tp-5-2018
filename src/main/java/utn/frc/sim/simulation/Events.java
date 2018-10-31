@@ -4,7 +4,6 @@ public enum Events {
     INICIO("Inicio."),
     INICIO_DEL_DIA("Inicio del dia."),
     LLEGADA_CLIENTE("Llegada de camion."),
-    LLEGADA_CLIENTE_AFUERA("Llegada de camion (afuera)."),
     FIN_RECEPCION("Fin de recepcion."),
     FIN_BALANZA("Fin de balanza."),
     FIN_DARSENA_1("Fin de atencion darsena 1."),

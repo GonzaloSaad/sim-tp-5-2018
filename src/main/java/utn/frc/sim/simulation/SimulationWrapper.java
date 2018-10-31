@@ -150,14 +150,6 @@ public class SimulationWrapper {
 
 
     /*
-    Cola de afuera.
-     */
-
-    public String getOutsideQueueLenght(){
-        return Integer.toString(simulation.getOutsideQueue().size());
-    }
-
-    /*
     Estatisticas y conteos.
      */
 

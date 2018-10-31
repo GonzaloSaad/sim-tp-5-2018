@@ -30,7 +30,6 @@ public class Simulation {
     private Server darsena_1;
     private Server darsena_2;
     private Queue<Client> darsenaQueue;
-    private Queue<Client> outsideQueue;
     private ClientGenerator clientGenerator;
     private double avgMinutesPerTruck;
     private int avgTrucksOutside;
@@ -57,7 +56,6 @@ public class Simulation {
         initBalanza();
         initDarsenas();
         initClientGenerator(type);
-        initOutsideQueue();
         initEvent();
     }
 
@@ -114,10 +112,6 @@ public class Simulation {
         clientGenerator = new ClientGenerator(clientsInitial, generator);
     }
 
-    private void initOutsideQueue() {
-        outsideQueue = new LinkedList<>();
-    }
-
     public void step() throws SimulationFinishedException {
         clock = getNextEvent();
         handleEventFromFirstEvent(clock);
@@ -127,7 +121,7 @@ public class Simulation {
         if (dayFirstEvent.isEqual(clock)) {
 
             day++;
-            if(day > limitOfSimulations){
+            if (day > limitOfSimulations) {
                 throw new SimulationFinishedException();
             }
             logger.debug("{} - Day start.", clock);
@@ -136,16 +130,11 @@ public class Simulation {
             clientOfEvent = null;
             calculateAvgTrucksOutside();
 
-
-            while (!outsideQueue.isEmpty()) {
-                Client clientOfOutsideQueue = outsideQueue.poll();
-                logger.debug("{} - Ingesting outside clients. Client: {}.", clock, clientOfOutsideQueue);
-                if (recepcion.isFree()) {
-                    clientOfOutsideQueue.setInTime(clock);
-                    recepcion.serveToClient(clock, clientOfOutsideQueue);
-                } else {
-                    recepcionQueue.add(clientOfOutsideQueue);
-                }
+            if (recepcion.isFree() && !recepcionQueue.isEmpty()) {
+                Client client = recepcionQueue.poll();
+                logger.debug("{} - Ingesting outside client. Client: {}.", clock, client);
+                client.setInTime(clock);
+                recepcion.serveToClient(clock, client);
             }
         } else {
             handleEventFromClients(clock);
@@ -157,23 +146,14 @@ public class Simulation {
 
             Client nextClient = clientGenerator.getNextClient();
             clientOfEvent = nextClient;
-
-            if (clock.getHour() >= 18) {
-                lastEventDescription = Events.LLEGADA_CLIENTE_AFUERA;
-                logger.debug("{} - New client. Hour > 18. Going to wait ouside. Client: {}.", clock, nextClient);
-                outsideQueue.add(nextClient);
+            lastEventDescription = Events.LLEGADA_CLIENTE;
+            logger.debug("{} - New client into the system. Client: {}.", clock, nextClient);
+            if (recepcion.isFree()) {
+                nextClient.setInTime(clock);
+                recepcion.serveToClient(clock, nextClient);
             } else {
-                lastEventDescription = Events.LLEGADA_CLIENTE;
-                logger.debug("{} - New client into the system. Client: {}.", clock, nextClient);
-                if (recepcion.isFree()) {
-                    nextClient.setInTime(clock);
-                    recepcion.serveToClient(clock, nextClient);
-                } else {
-                    recepcionQueue.add(nextClient);
-                }
+                recepcionQueue.add(nextClient);
             }
-
-
         } else {
             handleEventFromRecepcion(clock);
         }
@@ -280,7 +260,7 @@ public class Simulation {
     }
 
     private void calculateAvgTrucksOutside() {
-        avgTrucksOutside += outsideQueue.size();
+        avgTrucksOutside += recepcionQueue.size();
     }
 
     private LocalDateTime getNextEvent() {
@@ -376,10 +356,6 @@ public class Simulation {
 
     public Queue<Client> getDarsenaQueue() {
         return darsenaQueue;
-    }
-
-    public Queue<Client> getOutsideQueue() {
-        return outsideQueue;
     }
 
     public ClientGenerator getClientGenerator() {
