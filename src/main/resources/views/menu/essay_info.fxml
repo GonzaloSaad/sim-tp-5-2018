@@ -4,27 +4,38 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="540.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="utn.frc.sim.view.MainMenuController">
-   <children>
-      <Label alignment="CENTER" contentDisplay="CENTER" layoutX="450.0" layoutY="193.0" prefHeight="35.0" prefWidth="302.0" text="Trabajo Práctico N° 5" textAlignment="CENTER" underline="true">
-         <font>
-            <Font name="System Bold" size="24.0" />
-         </font>
-      </Label>
-      <Label alignment="CENTER" contentDisplay="CENTER" layoutX="477.0" layoutY="141.0" prefHeight="30.0" prefWidth="249.0" text="Simulación curso 4K4" textAlignment="CENTER">
-         <font>
-            <Font name="System Bold" size="18.0" />
-         </font>
-      </Label>
-      <Label alignment="CENTER" contentDisplay="CENTER" layoutX="462.0" layoutY="228.0" prefHeight="79.0" prefWidth="277.0" text="&quot;Sistema de Colas&quot;" textAlignment="CENTER" wrapText="true">
-         <font>
-            <Font size="24.0" />
-         </font>
-      </Label>
-      <Label alignment="CENTER" contentDisplay="CENTER" layoutX="430.0" layoutY="291.0" prefHeight="161.0" prefWidth="341.0" text="Santiago Argüello&#9;&#9;69966&#10;José I. Caffaratti&#9;&#9;58333&#10;Gonzalo Saad&#9;&#9;&#9;70785&#10;Andrés Acosta&#9;&#9;&#9;59434&#10;Juan M. Antonellini&#9;&#9;63029" textAlignment="JUSTIFY" wrapText="true">
-         <font>
-            <Font name="System Bold" size="18.0" />
-         </font>
-      </Label>
-   </children>
+<?import javafx.scene.layout.Pane?>
+<AnchorPane prefHeight="700" prefWidth="1300" xmlns="http://javafx.com/javafx/8.0.172-ea"
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="utn.frc.sim.view.MainMenuController">
+    <Pane fx:id="paneMain" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="35.0"
+          AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="25.0">
+        <children>
+            <Label alignment="CENTER" contentDisplay="CENTER" layoutX="479.0" layoutY="237.0" prefHeight="35.0"
+                   prefWidth="341.0" text="Trabajo Práctico N° 5" underline="true">
+                <font>
+                    <Font name="System Bold" size="24.0"/>
+                </font>
+            </Label>
+            <Label alignment="CENTER" layoutX="525.0" layoutY="193.0" prefHeight="30.0" prefWidth="249.0"
+                   text="Simulación curso 4K4" textAlignment="CENTER">
+                <font>
+                    <Font name="System Bold" size="18.0"/>
+                </font>
+            </Label>
+            <Label alignment="CENTER" layoutX="525.0" layoutY="264.0" prefHeight="79.0" prefWidth="249.0"
+                   text="&quot;Sistema de Colas&quot;" textAlignment="CENTER" wrapText="true">
+                <font>
+                    <Font size="24.0"/>
+                </font>
+            </Label>
+            <Label alignment="CENTER" contentDisplay="CENTER" layoutX="458.0" layoutY="343.0" prefHeight="161.0"
+                   prefWidth="384.0"
+                   text="Santiago Argüello&#9;&#9;69966&#10;José I. Caffaratti&#9;&#9;58333&#10;Gonzalo Saad&#9;&#9;&#9;70785&#10;Andrés Acosta&#9;&#9;&#9;59434&#10;Juan M. Antonellini&#9;&#9;63029"
+                   textAlignment="CENTER" wrapText="true">
+                <font>
+                    <Font name="System Bold" size="18.0"/>
+                </font>
+            </Label>
+        </children>
+    </Pane>
 </AnchorPane>

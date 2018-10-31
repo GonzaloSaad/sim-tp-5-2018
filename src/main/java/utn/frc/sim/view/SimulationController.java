@@ -99,6 +99,10 @@ public class SimulationController {
     @FXML
     private Text txCamionesTotales;
 
+    @FXML
+    private TextField txt_Numeric;
+    @FXML
+    private TextField txt_Letters;
 
     private SimulationWrapper simulation;
     private ObservableList<Fila> data;
@@ -106,6 +110,7 @@ public class SimulationController {
     @FXML
     public void initialize() {
         resetSimulation();
+
     }
 
     @FXML
