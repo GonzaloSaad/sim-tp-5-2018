@@ -2,6 +2,7 @@ package utn.frc.sim.simulation;
 
 import utn.frc.sim.util.DoubleUtils;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 
 public class SimulationWrapper {
@@ -161,7 +162,7 @@ public class SimulationWrapper {
      */
 
     public String getNumberOfTrucksServed() {
-        return Integer.toString(simulation.getTrucksServed());
+        return String.valueOf(simulation.getTrucksServed());
     }
 
     public String getDay() {
@@ -169,16 +170,33 @@ public class SimulationWrapper {
     }
 
     public String getAverageDurationOfService() {
-        return DoubleUtils.getDoubleWithFourPlaces(simulation.getAvgMinutesPerTruck());
+        return String.valueOf(DoubleUtils.round(simulation.getAvgMinutesPerTruck(), 2)) + " min"; //Ya se que es una negrada gonza, no jodas =D
     }
 
     public String getAmountOfTrucksOutside(){
-        return DoubleUtils.getDoubleWithFourPlaces(simulation.getAvgTrucksOutside());
+        return String.valueOf(simulation.getAvgTrucksOutside());
     }
 
     public String getTrucksServedPerDay() {
         return DoubleUtils.getDoubleWithFourPlaces(simulation.getTrucksServedPerDay());
     }
 
+    public boolean verifyRowToAddToTable(String txtFromDay, String txtToDay, String txtFromHour, String txtToHour){
+        if(txtFromDay.equals("")) txtFromDay = "1";
+        if(txtToDay.equals("")) txtToDay = "30";
+        if(txtToHour.equals("")) txtToHour = "20";
+        if(txtFromHour.equals("")) txtFromHour = "5";
+        return  isInDayRange(Integer.parseInt(txtFromDay), Integer.parseInt(txtToDay)) &&
+                isInHourRange(Integer.parseInt(txtFromHour), Integer.parseInt(txtToHour));
+
+    }
+
+    private boolean isInDayRange(Integer fromDay, Integer toDay){
+        return simulation.getDay() >= fromDay && simulation.getDay() <= toDay;
+    }
+    private boolean isInHourRange(Integer fromHour, Integer toHour){
+        toHour--;
+        return simulation.getClock().getHour() >= fromHour && simulation.getClock().getHour() <= toHour;
+    }
 
 }

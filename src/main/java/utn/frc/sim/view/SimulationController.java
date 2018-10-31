@@ -10,6 +10,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.text.Text;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import utn.frc.sim.simulation.SimulationFinishedException;
@@ -89,6 +90,15 @@ public class SimulationController {
     @FXML
     private TextField txtToHour;
 
+    @FXML
+    private Text txAvgDurationService;
+    @FXML
+    private Text txCamionesNoAtendidos;
+    @FXML
+    private Text txCamionesXDia;
+    @FXML
+    private Text txCamionesTotales;
+
 
     private SimulationWrapper simulation;
     private ObservableList<Fila> data;
@@ -100,6 +110,7 @@ public class SimulationController {
 
     @FXML
     void btnRunClick(ActionEvent event) {
+        resetSimulation();
         runSimulationToEnd();
     }
 
@@ -111,7 +122,14 @@ public class SimulationController {
     private void runSimulationToEnd() {
         disableSemiautomaticButton();
         runSimulation(Boolean.TRUE);
-        
+        setStats();
+    }
+
+    private void setStats(){
+        txCamionesXDia.setText(simulation.getTrucksServedPerDay());
+        txCamionesTotales.setText(simulation.getNumberOfTrucksServed());
+        txCamionesNoAtendidos.setText(simulation.getAmountOfTrucksOutside());
+        txAvgDurationService.setText(simulation.getAverageDurationOfService());
     }
 
     private void runOneStepOfSimulation() {
@@ -125,6 +143,10 @@ public class SimulationController {
 
     private void resetSimulation() {
         logger.debug("Force ending the current simulation. Restart was requested.");
+        txAvgDurationService.setText("0");
+        txCamionesNoAtendidos.setText("0");
+        txCamionesTotales.setText("0");
+        txCamionesXDia.setText("0");
         enableSemiautomaticButton();
         clearItemsInTableView();
         initializeNewSimulation();
@@ -175,9 +197,7 @@ public class SimulationController {
     }
     private void runOneStepAndAddToTable() throws SimulationFinishedException {
         simulation.step();
-        if (txtFromDay.getText().isEmpty() && txtToDay.getText().isEmpty() ||
-                Integer.parseInt(simulation.getDay()) >= Integer.parseInt(txtFromDay.getText()) &&
-                        Integer.parseInt(simulation.getDay()) <= Integer.parseInt(txtToDay.getText())){
+        if (simulation.verifyRowToAddToTable(txtFromDay.getText(), txtToDay.getText(), txtFromHour.getText(), txtToHour.getText())){
             loadTable();
         }
      }
@@ -203,12 +223,13 @@ public class SimulationController {
         String truckDar2Content = simulation.getDarsena2Client();
         String endDar2Content = simulation.getgetDarsena2NextEvent();
         String queueDarContent = simulation.getDarsenaQueueLenght();
+        String truckServedContent = simulation.getNumberOfTrucksServed();
         String dayContent = simulation.getDay();
 
         data.addAll(new Fila(eventContent, clockContent, trucksContent, nextArrivalContent, stateReceptionContent,
                 truckRecContent, endRecContent, queueRecContent, stateBalContent, truckBalContent, endBalContent,
                 queueBalContent, stateDar1Content, truckDar1Content, endDar1Content, stateDar2Content,
-                truckDar2Content, endDar2Content, queueDarContent, dayContent));
+                truckDar2Content, endDar2Content, queueDarContent, truckServedContent, dayContent));
 
         event.setCellValueFactory(new PropertyValueFactory<>("event"));
         clock.setCellValueFactory(new PropertyValueFactory<>("clock"));
@@ -229,8 +250,8 @@ public class SimulationController {
         truckDar2.setCellValueFactory(new PropertyValueFactory<>("truckDar2"));
         endDar2.setCellValueFactory(new PropertyValueFactory<>("endDar2"));
         queueDar.setCellValueFactory(new PropertyValueFactory<>("queueDar"));
+        truckServed.setCellValueFactory(new PropertyValueFactory<>("truckServed"));
         day.setCellValueFactory(new PropertyValueFactory<>("day"));
-
 
         tvSim.setItems(data);
     }

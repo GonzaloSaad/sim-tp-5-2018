@@ -1,16 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane fx:id="panelSim1" prefHeight="573.0" prefWidth="1100.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="utn.frc.sim.view.SimulationController">
-    <TableView fx:id="tvSim" layoutX="24.0" layoutY="62.0" prefHeight="412.0" prefWidth="815.0" AnchorPane.leftAnchor="250.0" AnchorPane.rightAnchor="35.0">
+<AnchorPane fx:id="panelSim1" prefHeight="573.0" prefWidth="1100.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="utn.frc.sim.view.SimulationController">
+    <TableView fx:id="tvSim" layoutX="205.0" layoutY="62.0" prefHeight="412.0" prefWidth="860.0" AnchorPane.leftAnchor="205.0" AnchorPane.rightAnchor="35.0">
         <columns>
             <TableColumn fx:id="event" prefWidth="75.0" text="Evento" />
             <TableColumn fx:id="clock" prefWidth="75.0" text="Reloj" />
@@ -32,6 +34,7 @@
             <TableColumn fx:id="endDar2" prefWidth="75.0" text="Fin atencion" />
             <TableColumn fx:id="queueDar" prefWidth="75.0" text="Cola darsena" />
             <TableColumn fx:id="day" prefWidth="75.0" text="Dia" />
+         <TableColumn fx:id="truckServed" prefWidth="75.0" text="Camiones atendidos" />
         </columns>
     </TableView>
 
@@ -48,24 +51,51 @@
          <Font name="System Bold" size="24.0" />
       </font>
    </Label>
-   <Label alignment="CENTER" contentDisplay="CENTER" layoutX="182.0" layoutY="524.0" prefHeight="35.0" prefWidth="168.0" text="Prom. duracion del servicio: " textAlignment="CENTER">
+   <Label alignment="CENTER" contentDisplay="CENTER" layoutX="173.0" layoutY="524.0" prefHeight="35.0" prefWidth="175.0" text="Prom. duracion del servicio: " textAlignment="CENTER">
       <font>
          <Font name="Arial Bold" size="12.0" />
       </font>
    </Label>
-   <Text fx:id="txAvgDurationService" layoutX="354.0" layoutY="546.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="77.99999952316284" />
-   <Label alignment="CENTER" contentDisplay="CENTER" layoutX="438.0" layoutY="524.0" prefHeight="35.0" prefWidth="168.0" text="Prom. camiones afuera:  " textAlignment="CENTER">
+   <Text fx:id="txAvgDurationService" layoutX="341.0" layoutY="546.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0" wrappingWidth="63.49220275878906" />
+   <Label alignment="CENTER" contentDisplay="CENTER" layoutX="405.0" layoutY="524.0" prefHeight="35.0" prefWidth="147.0" text="Camiones no atendidos: " textAlignment="CENTER">
       <font>
          <Font name="Arial Bold" size="12.0" />
       </font>
    </Label>
-   <Text fx:id="txAvgDurationService1" layoutX="610.0" layoutY="546.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="77.99999952316284" />
-   <TextField fx:id="txtFromDay" layoutX="147.0" layoutY="94.0" prefHeight="25.0" prefWidth="71.0" />
-   <TextField fx:id="txtToDay" layoutX="147.0" layoutY="129.0" prefHeight="25.0" prefWidth="71.0" />
-   <TextField fx:id="txtToHour" layoutX="147.0" layoutY="204.0" prefHeight="25.0" prefWidth="71.0" />
-   <TextField fx:id="txtFromHour" layoutX="147.0" layoutY="166.0" prefHeight="25.0" prefWidth="71.0" />
-   <Label layoutX="45.0" layoutY="170.0" text="Hora desde:" />
-   <Label layoutX="47.0" layoutY="208.0" text="Hora hasta:" />
-   <Label layoutX="53.0" layoutY="98.0" text="Dia desde:" />
-   <Label layoutX="57.0" layoutY="133.0" text="Dia hasta:" />
+   <Text fx:id="txCamionesNoAtendidos" layoutX="552.0" layoutY="546.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0" wrappingWidth="51.47460997104645" />
+   <Pane layoutX="8.0" layoutY="58.0" prefHeight="188.0" prefWidth="185.0" style="-fx-border-color: BLACK;">
+      <children>
+         <TextField fx:id="txtFromDay" layoutX="102.0" layoutY="44.0" prefHeight="25.0" prefWidth="71.0" />
+         <TextField fx:id="txtToDay" layoutX="102.0" layoutY="79.0" prefHeight="25.0" prefWidth="71.0" />
+         <TextField fx:id="txtToHour" layoutX="102.0" layoutY="154.0" prefHeight="25.0" prefWidth="71.0" />
+         <TextField fx:id="txtFromHour" layoutX="102.0" layoutY="116.0" prefHeight="25.0" prefWidth="71.0" />
+         <Label layoutX="6.0" layoutY="120.0" text="Hora desde:" />
+         <Label layoutX="8.0" layoutY="158.0" text="Hora hasta:" />
+         <Label layoutX="4.0" layoutY="48.0" text="Dia desde:" />
+         <Label layoutX="6.0" layoutY="83.0" text="Dia hasta:" />
+         <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="16.0" prefWidth="168.0" text="Parametros: " underline="true">
+            <font>
+               <Font name="System Bold" size="16.0" />
+            </font>
+         </Label>
+      </children>
+      <opaqueInsets>
+         <Insets />
+      </opaqueInsets>
+      <padding>
+         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+      </padding>
+   </Pane>
+   <Label alignment="CENTER" contentDisplay="CENTER" layoutX="603.0" layoutY="524.0" prefHeight="35.0" prefWidth="175.0" text="Camiones atendidos por dia: " textAlignment="CENTER">
+      <font>
+         <Font name="Arial Bold" size="12.0" />
+      </font>
+   </Label>
+   <Text fx:id="txCamionesXDia" layoutX="778.0" layoutY="546.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0" wrappingWidth="55.08987009525299" />
+   <Label alignment="CENTER" contentDisplay="CENTER" layoutX="840.0" layoutY="524.0" prefHeight="35.0" prefWidth="161.0" text="Total camiones atendidos: " textAlignment="CENTER">
+      <font>
+         <Font name="Arial Bold" size="12.0" />
+      </font>
+   </Label>
+   <Text fx:id="txCamionesTotales" layoutX="1009.0" layoutY="546.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0" wrappingWidth="55.08987009525299" />
 </AnchorPane>

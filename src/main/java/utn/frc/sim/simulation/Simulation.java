@@ -33,7 +33,7 @@ public class Simulation {
     private Queue<Client> outsideQueue;
     private ClientGenerator clientGenerator;
     private double avgMinutesPerTruck;
-    private double avgTrucksOutside;
+    private int avgTrucksOutside;
     private int trucksServed;
     private Events lastEventDescription;
     private Client clientOfEvent;
@@ -324,12 +324,12 @@ public class Simulation {
         return avgMinutesPerTruck;
     }
 
-    public double getAvgTrucksOutside() {
+    public int getAvgTrucksOutside() {
         return avgTrucksOutside;
     }
 
     public double getTrucksServedPerDay() {
-        return (double) trucksServed / clientGenerator.getDays();
+        return (double) trucksServed / (clientGenerator.getDays()-1);
     }
 
     public int getDay() {

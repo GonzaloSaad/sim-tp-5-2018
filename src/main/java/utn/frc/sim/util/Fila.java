@@ -7,7 +7,7 @@ public class Fila {
 
     private final SimpleStringProperty event;
     private final SimpleStringProperty clock;
-    private  final SimpleStringProperty trucks;
+    private final SimpleStringProperty trucks;
     private final SimpleStringProperty nextArrival;
     private final SimpleStringProperty stateReception;
     private final SimpleStringProperty truckRec;
@@ -24,9 +24,10 @@ public class Fila {
     private final SimpleStringProperty truckDar2;
     private final SimpleStringProperty endDar2;
     private final SimpleStringProperty queueDar;
+    private final SimpleStringProperty truckServed;
     private final SimpleStringProperty day;
 
-    public Fila(String event, String clock,String trucks, String nextArrival, String stateReception, String truckRec, String endRec, String queueRec, String stateBal, String truckBal, String endBal, String queueBal, String stateDar1, String truckDar1, String endDar1, String stateDar2, String truckDar2, String endDar2, String queueDar, String day) {
+    public Fila(String event, String clock,String trucks, String nextArrival, String stateReception, String truckRec, String endRec, String queueRec, String stateBal, String truckBal, String endBal, String queueBal, String stateDar1, String truckDar1, String endDar1, String stateDar2, String truckDar2, String endDar2, String queueDar, String truckServed, String day) {
         this.event =  new SimpleStringProperty(event);
         this.clock = new SimpleStringProperty(clock);
         this.trucks = new SimpleStringProperty(trucks);
@@ -46,6 +47,7 @@ public class Fila {
         this.truckDar2 = new SimpleStringProperty(truckDar2);
         this.endDar2 = new SimpleStringProperty(endDar2);
         this.queueDar = new SimpleStringProperty(queueDar);
+        this.truckServed = new SimpleStringProperty(truckServed);
         this.day = new SimpleStringProperty(day);
     }
 
@@ -275,6 +277,18 @@ public class Fila {
 
     public void setQueueDar(String queueDar) {
         this.queueDar.set(queueDar);
+    }
+
+    public String getTruckServed() {
+        return truckServed.get();
+    }
+
+    public SimpleStringProperty truckServedProperty() {
+        return truckServed;
+    }
+
+    public void setTruckServed(String truckServed) {
+        this.truckServed.set(truckServed);
     }
 
     public String getDay() {
