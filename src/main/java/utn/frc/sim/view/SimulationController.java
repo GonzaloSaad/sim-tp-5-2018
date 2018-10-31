@@ -213,6 +213,7 @@ public class SimulationController {
         queueDar.setCellValueFactory(new PropertyValueFactory<>("queueDar"));
         day.setCellValueFactory(new PropertyValueFactory<>("day"));
 
+
         tvSim.setItems(data);
     }
 }
