@@ -7,6 +7,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import org.apache.logging.log4j.LogManager;
@@ -75,6 +76,19 @@ public class SimulationController {
 
     @FXML
     private Button semiautomatic;
+
+    @FXML
+    private TextField txtFromDay;
+
+    @FXML
+    private TextField txtToDay;
+
+    @FXML
+    private TextField txtFromHour;
+
+    @FXML
+    private TextField txtToHour;
+
 
     private SimulationWrapper simulation;
     private ObservableList<Fila> data;
@@ -161,8 +175,12 @@ public class SimulationController {
     }
     private void runOneStepAndAddToTable() throws SimulationFinishedException {
         simulation.step();
-        loadTable();
-    }
+        if (txtFromDay.getText().isEmpty() && txtToDay.getText().isEmpty() ||
+                Integer.parseInt(simulation.getDay()) >= Integer.parseInt(txtFromDay.getText()) &&
+                        Integer.parseInt(simulation.getDay()) <= Integer.parseInt(txtToDay.getText())){
+            loadTable();
+        }
+     }
 
     private void loadTable() {
 
