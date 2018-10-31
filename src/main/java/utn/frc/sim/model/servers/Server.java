@@ -1,6 +1,7 @@
 package utn.frc.sim.model.servers;
 
 import utn.frc.sim.generators.distributions.DistributionRandomGenerator;
+import utn.frc.sim.model.TimeEvent;
 import utn.frc.sim.model.clients.Client;
 import utn.frc.sim.model.Event;
 
@@ -10,23 +11,21 @@ import java.util.Optional;
 
 public class Server {
 
-    private static final String END_OF_ATTENTION = "FA";
-    private static final String SEPARATOR = "-";
     private final String serverName;
     protected LocalDateTime nextEnd;
     protected Client servingClient;
-    private DistributionRandomGenerator generator;
+    protected TimeEvent timeEvent;
     protected ServerState state;
 
     public Server(String serverName, DistributionRandomGenerator generator) {
         this.serverName = serverName;
-        this.generator = generator;
+        this.timeEvent = new TimeEvent(generator);
         this.state = ServerState.LBR;
     }
 
     public void serveToClient(LocalDateTime clock, Client client) {
         servingClient = client;
-        nextEnd = clock.plus((int) generator.random(), ChronoUnit.MINUTES);
+        nextEnd = timeEvent.calculateNextEventFromRandom(clock);
         state = ServerState.OCP;
     }
 
