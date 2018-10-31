@@ -81,7 +81,7 @@ public class SimulationController {
 
     @FXML
     public void initialize() {
-        initializeNewSimulation();
+        resetSimulation();
     }
 
     @FXML
