@@ -277,7 +277,7 @@ public class Simulation {
     }
 
     private void calculateAvgTrucksOutside() {
-        avgTrucksOutside = ((double) 1 / day) * ((day - 1) * avgTrucksOutside + outsideQueue.size());
+        avgTrucksOutside += outsideQueue.size();
     }
 
     private LocalDateTime getNextEvent() {

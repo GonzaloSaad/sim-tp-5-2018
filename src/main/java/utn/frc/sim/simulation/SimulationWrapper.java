@@ -172,7 +172,7 @@ public class SimulationWrapper {
         return DoubleUtils.getDoubleWithFourPlaces(simulation.getAvgMinutesPerTruck());
     }
 
-    public String getAverageTrucksOutside(){
+    public String getAmountOfTrucksOutside(){
         return DoubleUtils.getDoubleWithFourPlaces(simulation.getAvgTrucksOutside());
     }
 

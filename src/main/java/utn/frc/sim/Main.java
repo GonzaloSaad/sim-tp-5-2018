@@ -6,6 +6,9 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import utn.frc.sim.simulation.SimulationFinishedException;
+import utn.frc.sim.simulation.SimulationType;
+import utn.frc.sim.simulation.SimulationWrapper;
 
 
 public class Main extends Application {
