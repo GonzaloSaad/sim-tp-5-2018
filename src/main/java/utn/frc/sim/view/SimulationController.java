@@ -3,11 +3,13 @@ package utn.frc.sim.view;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
@@ -68,28 +70,20 @@ public class SimulationController {
     private TableColumn<Fila, String> avg;
     @FXML
     private TableColumn<Fila, String> truckXDayServed;
-
     @FXML
     private TableView<Fila> tvSim;
-
     @FXML
     private AnchorPane panelSim1;
-
     @FXML
     private Button semiautomatic;
-
     @FXML
     private TextField txtFromDay;
-
     @FXML
     private TextField txtToDay;
-
     @FXML
     private TextField txtFromHour;
-
     @FXML
     private TextField txtToHour;
-
     @FXML
     private Text txAvgDurationService;
     @FXML
@@ -99,19 +93,34 @@ public class SimulationController {
     @FXML
     private Text txCamionesTotales;
 
-    @FXML
-    private TextField txt_Numeric;
-    @FXML
-    private TextField txt_Letters;
-
     private SimulationWrapper simulation;
     private ObservableList<Fila> data;
 
     @FXML
     public void initialize() {
         resetSimulation();
-
+        txtToDay.addEventHandler(KeyEvent.KEY_TYPED, validacion_numerica);
+        txtFromDay.addEventHandler(KeyEvent.KEY_TYPED, validacion_numerica);
     }
+
+    private EventHandler<KeyEvent> validacion_numerica = new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent e) {
+                TextField txt_TextField = (TextField) e.getSource();
+                if (txt_TextField.getText().length() >= 30) {
+                    e.consume();
+                }
+                if(e.getCharacter().matches("[0-9.]")){
+                    if(txt_TextField.getText().contains(".") && e.getCharacter().matches("[.]")){
+                        e.consume();
+                    }else if(txt_TextField.getText().length() == 0 && e.getCharacter().matches("[.]")){
+                        e.consume();
+                    }
+                }else{
+                    e.consume();
+                }
+            }
+        };
 
     @FXML
     void btnRunClick(ActionEvent event) {
@@ -260,4 +269,5 @@ public class SimulationController {
 
         tvSim.setItems(data);
     }
+
 }
