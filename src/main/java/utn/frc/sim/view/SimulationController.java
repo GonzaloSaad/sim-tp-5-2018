@@ -1,5 +1,6 @@
 package utn.frc.sim.view;
 
+import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -23,6 +24,8 @@ public class SimulationController {
 
     private static final Logger logger = LogManager.getLogger(SimulationController.class);
     private static final int MAX_SIMULATION = 30;
+    private SimulationWrapper simulation;
+    private ObservableList<Fila> data;
 
     @FXML
     private TableColumn<Fila, String> event;
@@ -93,34 +96,10 @@ public class SimulationController {
     @FXML
     private Text txCamionesTotales;
 
-    private SimulationWrapper simulation;
-    private ObservableList<Fila> data;
-
     @FXML
     public void initialize() {
         resetSimulation();
-        txtToDay.addEventHandler(KeyEvent.KEY_TYPED, validacion_numerica);
-        txtFromDay.addEventHandler(KeyEvent.KEY_TYPED, validacion_numerica);
     }
-
-    private EventHandler<KeyEvent> validacion_numerica = new EventHandler<KeyEvent>() {
-            @Override
-            public void handle(KeyEvent e) {
-                TextField txt_TextField = (TextField) e.getSource();
-                if (txt_TextField.getText().length() >= 30) {
-                    e.consume();
-                }
-                if(e.getCharacter().matches("[0-9.]")){
-                    if(txt_TextField.getText().contains(".") && e.getCharacter().matches("[.]")){
-                        e.consume();
-                    }else if(txt_TextField.getText().length() == 0 && e.getCharacter().matches("[.]")){
-                        e.consume();
-                    }
-                }else{
-                    e.consume();
-                }
-            }
-        };
 
     @FXML
     void btnRunClick(ActionEvent event) {
