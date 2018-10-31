@@ -329,7 +329,7 @@ public class Simulation {
     }
 
     public double getTrucksServedPerDay() {
-        return (double) trucksServed / (clientGenerator.getDays()-1);
+        return (double) trucksServed / (clientGenerator.getDays()-1); // Error de gonza resuelto negramente
     }
 
     public int getDay() {
