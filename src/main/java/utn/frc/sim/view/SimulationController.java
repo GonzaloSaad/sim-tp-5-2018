@@ -119,13 +119,18 @@ public class SimulationController {
         runOneStepOfSimulation();
     }
 
+    @FXML
+    void btnReset(ActionEvent event) {
+        resetSimulation();
+    }
+
     private void runSimulationToEnd() {
         disableSemiautomaticButton();
         runSimulation(Boolean.TRUE);
         setStats();
     }
 
-    private void setStats(){
+    private void setStats() {
         txCamionesXDia.setText(simulation.getTrucksServedPerDay());
         txCamionesTotales.setText(simulation.getNumberOfTrucksServed());
         txCamionesNoAtendidos.setText(simulation.getAmountOfTrucksOutside());
@@ -136,13 +141,7 @@ public class SimulationController {
         runSimulation(Boolean.FALSE);
     }
 
-    @FXML
-    void btnReset(ActionEvent event) {
-        resetSimulation();
-    }
-
     private void resetSimulation() {
-        logger.debug("Force ending the current simulation. Restart was requested.");
         txAvgDurationService.setText("0");
         txCamionesNoAtendidos.setText("0");
         txCamionesTotales.setText("0");
@@ -192,15 +191,16 @@ public class SimulationController {
         }
     }
 
-    private void calculateStats(){
+    private void calculateStats() {
 
     }
+
     private void runOneStepAndAddToTable() throws SimulationFinishedException {
         simulation.step();
-        if (simulation.verifyRowToAddToTable(txtFromDay.getText(), txtToDay.getText(), txtFromHour.getText(), txtToHour.getText())){
+        if (simulation.verifyRowToAddToTable(txtFromDay.getText(), txtToDay.getText(), txtFromHour.getText(), txtToHour.getText())) {
             loadTable();
         }
-     }
+    }
 
     private void loadTable() {
 
