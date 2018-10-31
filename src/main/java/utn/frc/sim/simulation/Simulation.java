@@ -102,7 +102,7 @@ public class Simulation {
         DistributionRandomGenerator generator;
         int hourOfStart;
         if (type == SimulationType.Type1) {
-            generator = NegativeExponentialDistributionGenerator.createOf(1 / 7.5);
+            generator = NegativeExponentialDistributionGenerator.createOf(7.5);
             hourOfStart = 12;
         } else {
             generator = UniformDistributionGenerator.createOf(7, 8);
@@ -173,7 +173,7 @@ public class Simulation {
                     balanzaQueue.add(finishedClient);
                 }
 
-                if (!recepcionQueue.isEmpty()) {
+                if (!recepcionQueue.isEmpty() && isPlantOpenToServe()) {
                     Client nextClientForRecepcion = recepcionQueue.poll();
                     nextClientForRecepcion.setInTime(clock);
                     recepcion.serveToClient(clock, nextClientForRecepcion);
@@ -300,6 +300,10 @@ public class Simulation {
         }
 
         return firstEvent;
+    }
+
+    private boolean isPlantOpenToServe() {
+        return clock.getHour() < 18;
     }
 
     public double getAvgMinutesPerTruck() {

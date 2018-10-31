@@ -31,7 +31,7 @@ public class ServerWithInterruptions extends Server {
                 logger.info("{}: {} clients without interruptions. Next event is calibration.",
                         getServerName(),
                         clientsWithoutInterruptions);
-                nextEnd = nextEnd.plus((int) generator.random(), ChronoUnit.MINUTES);
+                nextEnd = timeEvent.calculateNextEventFromRandom(nextEnd);
                 state = ServerState.OUT;
             } else {
                 logger.info("{}: {} clients without interruptions.", getServerName(), clientsWithoutInterruptions);

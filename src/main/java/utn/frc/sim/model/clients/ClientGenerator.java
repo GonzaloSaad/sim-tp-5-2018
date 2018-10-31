@@ -1,6 +1,7 @@
 package utn.frc.sim.model.clients;
 
 import utn.frc.sim.generators.distributions.DistributionRandomGenerator;
+import utn.frc.sim.model.TimeEvent;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -10,10 +11,10 @@ public class ClientGenerator {
     private LocalDateTime initTime;
     private int lastClient;
     private int day;
-    private DistributionRandomGenerator generator;
+    private TimeEvent timeEvent;
 
     public ClientGenerator(LocalDateTime initTime, DistributionRandomGenerator generator) {
-        this.generator = generator;
+        this.timeEvent = new TimeEvent(generator);
         this.lastClient = 0;
         this.day = 1;
         this.nextClientEvent = initTime;
@@ -27,7 +28,7 @@ public class ClientGenerator {
     }
 
     private void calculateNextEvent() {
-        LocalDateTime nextEvent = nextClientEvent.plus((int) generator.random(), ChronoUnit.MINUTES);
+        LocalDateTime nextEvent = timeEvent.calculateNextEventFromRandom(nextClientEvent);
         if (nextEvent.getHour() >= 18) {
             nextClientEvent = initTime.plus(day, ChronoUnit.DAYS);
             day++;
