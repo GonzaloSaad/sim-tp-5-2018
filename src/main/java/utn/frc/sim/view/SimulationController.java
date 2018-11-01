@@ -1,13 +1,16 @@
 package utn.frc.sim.view;
 
+import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
@@ -21,6 +24,8 @@ public class SimulationController {
 
     private static final Logger logger = LogManager.getLogger(SimulationController.class);
     private static final int MAX_SIMULATION = 30;
+    private SimulationWrapper simulation;
+    private ObservableList<Fila> data;
 
     @FXML
     private TableColumn<Fila, String> event;
@@ -75,25 +80,18 @@ public class SimulationController {
 
     @FXML
     private TableView<Fila> tvSim;
-
     @FXML
     private AnchorPane panelSim1;
-
     @FXML
     private Button semiautomatic;
-
     @FXML
     private TextField txtFromDay;
-
     @FXML
     private TextField txtToDay;
-
     @FXML
     private TextField txtFromHour;
-
     @FXML
     private TextField txtToHour;
-
     @FXML
     private Text txAvgDurationService;
     @FXML
@@ -110,13 +108,9 @@ public class SimulationController {
 
 
 
-    private SimulationWrapper simulation;
-    private ObservableList<Fila> data;
-
     @FXML
     public void initialize() {
         resetSimulation();
-
     }
 
     @FXML
@@ -270,4 +264,5 @@ public class SimulationController {
 
         tvSim.setItems(data);
     }
+
 }
