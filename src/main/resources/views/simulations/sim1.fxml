@@ -1,10 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
@@ -17,7 +12,7 @@
 <?import utn.frc.sim.util.HoursTextField?>
 <?import utn.frc.sim.util.NumberTextField?>
 
-<AnchorPane fx:id="panelSim1" prefHeight="700" prefWidth="1300" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="utn.frc.sim.view.SimulationController">
+<AnchorPane fx:id="panelSim1" prefHeight="700" prefWidth="1300" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="utn.frc.sim.view.SimulationController">
     <TableView fx:id="tvSim" layoutX="45.0" layoutY="165.0" prefHeight="393.0" prefWidth="1221.0" AnchorPane.leftAnchor="40.0" AnchorPane.rightAnchor="39.0">
         <columns>
             <TableColumn fx:id="event" prefWidth="75.0" text="Evento" />
@@ -34,9 +29,11 @@
             <TableColumn fx:id="queueBal" prefWidth="75.0" text="Cola Balanza" />
             <TableColumn fx:id="stateDar1" prefWidth="75.0" text="Estado Darsena 1" />
             <TableColumn fx:id="truckDar1" prefWidth="75.0" text="Camion" />
+         <TableColumn fx:id="litrosCamionD1" prefWidth="75.0" text="L camion D1" />
             <TableColumn fx:id="endDar1" prefWidth="75.0" text="Fin Atencion" />
             <TableColumn fx:id="stateDar2" prefWidth="75.0" text="Estado Darsena 2" />
             <TableColumn fx:id="truckDar2" prefWidth="75.0" text="Camion" />
+         <TableColumn fx:id="litrosCamionD2" prefWidth="75.0" text="L camion D2" />
             <TableColumn fx:id="endDar2" prefWidth="75.0" text="Fin atencion" />
             <TableColumn fx:id="queueDar" prefWidth="75.0" text="Cola darsena" />
             <TableColumn fx:id="day" prefWidth="75.0" text="Dia" />
