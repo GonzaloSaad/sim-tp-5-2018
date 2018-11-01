@@ -1,6 +1,7 @@
 package utn.frc.sim.model.servers;
 
 import utn.frc.sim.generators.distributions.DistributionRandomGenerator;
+import utn.frc.sim.generators.distributions.NormalDistributionGenerator;
 import utn.frc.sim.model.TimeEvent;
 import utn.frc.sim.model.clients.Client;
 import utn.frc.sim.model.Event;
@@ -25,8 +26,12 @@ public class Server {
 
     public void serveToClient(LocalDateTime clock, Client client) {
         servingClient = client;
-        nextEnd = timeEvent.calculateNextEventFromRandom(clock);
+        nextEnd = calculateNextEventForClient(clock, client);
         state = ServerState.OCP;
+    }
+
+    protected LocalDateTime calculateNextEventForClient(LocalDateTime clock, Client client) {
+        return timeEvent.calculateNextEventFromRandom(clock);
     }
 
     public Event getEvent() {

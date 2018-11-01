@@ -26,8 +26,10 @@ public class Fila {
     private final SimpleStringProperty queueDar;
     private final SimpleStringProperty truckServed;
     private final SimpleStringProperty day;
+    private final SimpleStringProperty litrosCamionD1;
+    private final SimpleStringProperty litrosCamionD2;
 
-    public Fila(String event, String clock,String trucks, String nextArrival, String stateReception, String truckRec, String endRec, String queueRec, String stateBal, String truckBal, String endBal, String queueBal, String stateDar1, String truckDar1, String endDar1, String stateDar2, String truckDar2, String endDar2, String queueDar, String truckServed, String day) {
+    public Fila(String event, String clock,String trucks, String nextArrival, String stateReception, String truckRec, String endRec, String queueRec, String stateBal, String truckBal, String endBal, String queueBal, String stateDar1, String truckDar1, String endDar1, String stateDar2, String truckDar2, String endDar2, String queueDar, String truckServed, String day, String lD1, String lD2) {
         this.event =  new SimpleStringProperty(event);
         this.clock = new SimpleStringProperty(clock);
         this.trucks = new SimpleStringProperty(trucks);
@@ -49,10 +51,36 @@ public class Fila {
         this.queueDar = new SimpleStringProperty(queueDar);
         this.truckServed = new SimpleStringProperty(truckServed);
         this.day = new SimpleStringProperty(day);
+        this.litrosCamionD1 = new SimpleStringProperty(lD1);
+        this.litrosCamionD2 = new SimpleStringProperty(lD2);
     }
 
     public String getEvent() {
         return event.get();
+    }
+
+    public String getLitrosCamionD1() {
+        return litrosCamionD1.get();
+    }
+
+    public SimpleStringProperty litrosCamionD1Property() {
+        return litrosCamionD1;
+    }
+
+    public void setLitrosCamionD1(String litrosCamionD1) {
+        this.litrosCamionD1.set(litrosCamionD1);
+    }
+
+    public String getLitrosCamionD2() {
+        return litrosCamionD2.get();
+    }
+
+    public SimpleStringProperty litrosCamionD2Property() {
+        return litrosCamionD2;
+    }
+
+    public void setLitrosCamionD2(String litrosCamionD2) {
+        this.litrosCamionD2.set(litrosCamionD2);
     }
 
     public SimpleStringProperty eventProperty() {

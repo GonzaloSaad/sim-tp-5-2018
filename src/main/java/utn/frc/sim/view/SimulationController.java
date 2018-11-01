@@ -68,6 +68,10 @@ public class SimulationController {
     private TableColumn<Fila, String> avg;
     @FXML
     private TableColumn<Fila, String> truckXDayServed;
+    @FXML
+    private TableColumn<Fila, String> litrosCamionD1;
+    @FXML
+    private TableColumn<Fila, String> litrosCamionD2;
 
     @FXML
     private TableView<Fila> tvSim;
@@ -103,6 +107,8 @@ public class SimulationController {
     private TextField txt_Numeric;
     @FXML
     private TextField txt_Letters;
+
+
 
     private SimulationWrapper simulation;
     private ObservableList<Fila> data;
@@ -230,11 +236,13 @@ public class SimulationController {
         String queueDarContent = simulation.getDarsenaQueueLenght();
         String truckServedContent = simulation.getNumberOfTrucksServed();
         String dayContent = simulation.getDay();
+        String litrosCD1 = simulation.getDarsena1ClientCapacity();
+        String litrosCD2 = simulation.getDarsena2ClientCapacity();
 
         data.addAll(new Fila(eventContent, clockContent, trucksContent, nextArrivalContent, stateReceptionContent,
                 truckRecContent, endRecContent, queueRecContent, stateBalContent, truckBalContent, endBalContent,
                 queueBalContent, stateDar1Content, truckDar1Content, endDar1Content, stateDar2Content,
-                truckDar2Content, endDar2Content, queueDarContent, truckServedContent, dayContent));
+                truckDar2Content, endDar2Content, queueDarContent, truckServedContent, dayContent, litrosCD1, litrosCD2));
 
         event.setCellValueFactory(new PropertyValueFactory<>("event"));
         clock.setCellValueFactory(new PropertyValueFactory<>("clock"));
@@ -257,6 +265,8 @@ public class SimulationController {
         queueDar.setCellValueFactory(new PropertyValueFactory<>("queueDar"));
         truckServed.setCellValueFactory(new PropertyValueFactory<>("truckServed"));
         day.setCellValueFactory(new PropertyValueFactory<>("day"));
+        litrosCamionD1.setCellValueFactory(new PropertyValueFactory<>("litrosCamionD1"));
+        litrosCamionD2.setCellValueFactory(new PropertyValueFactory<>("litrosCamionD2"));
 
         tvSim.setItems(data);
     }

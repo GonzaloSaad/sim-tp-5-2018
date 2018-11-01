@@ -122,6 +122,20 @@ public class SimulationWrapper {
         return simulation.getDarsena1().getNextEnd().map(LocalDateTime::toString).orElse(NONE_SYMBOL);
     }
 
+    public String getDarsena1ClientK() {
+        return simulation.getDarsena1()
+                .getServingClient()
+                .map(client -> DoubleUtils.getDoubleWithFourPlaces(client.getK()))
+                .orElse(NONE_SYMBOL);
+    }
+
+    public String getDarsena1ClientCapacity() {
+        return simulation.getDarsena1()
+                .getServingClient()
+                .map(client -> DoubleUtils.getDoubleWithFourPlaces(client.getCapacity()))
+                .orElse(NONE_SYMBOL);
+    }
+
     /*
     Datos para Darsena 2.
      */
@@ -133,6 +147,20 @@ public class SimulationWrapper {
         return simulation.getDarsena2()
                 .getServingClient()
                 .map(client -> Integer.toString(client.getClientNumber()))
+                .orElse(NONE_SYMBOL);
+    }
+
+    public String getDarsena2ClientK() {
+        return simulation.getDarsena2()
+                .getServingClient()
+                .map(client -> DoubleUtils.getDoubleWithFourPlaces(client.getK()))
+                .orElse(NONE_SYMBOL);
+    }
+
+    public String getDarsena2ClientCapacity() {
+        return simulation.getDarsena2()
+                .getServingClient()
+                .map(client -> DoubleUtils.getDoubleWithFourPlaces(client.getCapacity()))
                 .orElse(NONE_SYMBOL);
     }
 

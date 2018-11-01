@@ -8,10 +8,19 @@ public class Client {
     private LocalDateTime inTime;
     private LocalDateTime outTime;
     private double capacity;
+    private double k;
 
 
     public Client(int clientNumber) {
         this.clientNumber = clientNumber;
+    }
+
+    public double getK() {
+        return k;
+    }
+
+    public void setK(double k) {
+        this.k = k;
     }
 
     public int getClientNumber() {

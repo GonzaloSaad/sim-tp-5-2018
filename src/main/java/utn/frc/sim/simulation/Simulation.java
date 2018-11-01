@@ -10,6 +10,7 @@ import utn.frc.sim.model.Event;
 import utn.frc.sim.model.clients.Client;
 import utn.frc.sim.model.clients.ClientGenerator;
 import utn.frc.sim.model.servers.Server;
+import utn.frc.sim.model.servers.ServerWithDistribution;
 import utn.frc.sim.model.servers.ServerWithInterruptions;
 
 import java.time.LocalDateTime;
@@ -97,7 +98,7 @@ public class Simulation {
     private Server createDarsenaForNumber(int number) {
         DistributionRandomGenerator generator = UniformDistributionGenerator.createOf(15, 20);
         NormalDistributionGenerator generatorForInterruptions = NormalDistributionGenerator.createOf(10, Math.sqrt(1.2));
-        return new ServerWithInterruptions("Darsena " + number, generator, 15, generatorForInterruptions);
+        return new ServerWithDistribution("Darsena " + number, generator, 15, generatorForInterruptions);
     }
 
     private void initClientGenerator(SimulationType type) {
